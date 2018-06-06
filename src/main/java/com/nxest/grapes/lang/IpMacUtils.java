@@ -5,6 +5,13 @@ import java.util.regex.Pattern;
 /**
  * A collection of InetAddresses utilities.
  *
+ * IP地址，一共分成了5类，范围分别如下：
+ * A类IP：从0.0.0.0 – 127.255.255.255，共有16777216个IP
+ * B类IP：从128.0.0.0 – 191.255.255.255，共有65536个IP
+ * C类IP：从192.0.0.0 – 223.255.255.255，共有256个IP
+ * D类IP：从224.0.0.0 – 239.255.255.255
+ * E类IP：从2240.0.0.0 – 255.255.255.255
+ *
  * @author l10178
  */
 public class IpMacUtils {

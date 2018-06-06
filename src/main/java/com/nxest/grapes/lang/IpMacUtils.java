@@ -30,23 +30,23 @@ public class IpMacUtils {
     private IpMacUtils() {
     }
 
-    public static boolean isIPV4Address(final String ip) {
+    public static boolean isIpV4Address(final String ip) {
         return IPV4_PATTERN.matcher(ip).matches();
     }
 
-    public static boolean isIPV6StandAddress(final String ip) {
+    public static boolean isIpV6StandAddress(final String ip) {
         return IPV6_STD_PATTERN.matcher(ip).matches();
     }
 
-    public static boolean isIPV6HexCompressedAddress(final String ip) {
+    public static boolean isIpV6HexCompressedAddress(final String ip) {
         return IPV6_HEX_COMPRESSED_PATTERN.matcher(ip).matches();
     }
 
-    public static boolean isIPV6Address(final String ip) {
-        return isIPV6StandAddress(ip) || isIPV6HexCompressedAddress(ip);
+    public static boolean isIpV6Address(final String ip) {
+        return isIpV6StandAddress(ip) || isIpV6HexCompressedAddress(ip);
     }
 
-    public static String longToIPV4(final long longIp) {
+    public static String longToIpV4(final long longIp) {
         return ((longIp >> 24) & 0xFF) +
             "." + ((longIp >> 16) & 0xFF) +
             "." + ((longIp >> 8) & 0xFF) +
@@ -54,7 +54,7 @@ public class IpMacUtils {
     }
 
     public static long ipV4ToLong(final String ip) {
-        if (!isIPV4Address(ip)) {
+        if (!isIpV4Address(ip)) {
             return INVALID_IPV4;
         }
         String[] octets = ip.split("\\.");

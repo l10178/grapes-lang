@@ -1,2 +1,2 @@
 # grapes-lang
-Grapes utils.
+A collection of InetAddresses utilities.

@@ -63,9 +63,6 @@ class IpMacUtilsTest {
 
     }
 
-    @Test
-    void ipV6ToDouble() {
-    }
 
     @Test
     void macToLong() {
@@ -73,10 +70,6 @@ class IpMacUtilsTest {
 
     @Test
     void longToMac() {
-    }
-
-    @Test
-    void isLegalIpV4WithMask() {
     }
 
     @Test

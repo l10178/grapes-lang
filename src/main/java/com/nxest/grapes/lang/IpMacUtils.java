@@ -270,47 +270,6 @@ public class IpMacUtils {
         return mac.toString();
     }
 
-
-    public static boolean isLegalIpV4WithMask(String ipMask, boolean isStandardMask) {
-        if (isBlank(ipMask)) {
-            return false;
-        }
-        if (ipMask.startsWith(SLASH) || ipMask.endsWith(SLASH) || countMatches(ipMask, SLASH) != 1) {
-            return false;
-        }
-        String[] parts = ipMask.trim().split(SLASH);
-        String ip = parts[0];
-        String mask = parts[1];
-        boolean legelMask;
-        if (!isLegalIpV4(mask) && !isLegalMask(mask)) {
-            try {
-                if (mask.length() > 1 && mask.startsWith("0")) {
-                    return false;
-                }
-
-                int maskInt = Integer.valueOf(mask);
-                if (maskInt < 0 || maskInt > 32) {
-                    return false;
-                }
-
-                legelMask = true;
-            } catch (Exception e) {
-                return false;
-            }
-        } else {
-            legelMask = isStandardMask ? isLegalMask(mask) : isLegalIpV4(mask);
-        }
-
-        return isLegalIpV4(ip) && legelMask;
-
-    }
-
-
-    public static boolean isLegalIpV4WithMask(String ipMask) {
-        return isLegalIpV4WithMask(ipMask, true);
-    }
-
-
     public static boolean isLegalMac(String mac) {
         return isNotBlank(mac) && MAC6.matcher(mac.trim()).matches();
     }

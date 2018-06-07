@@ -144,10 +144,6 @@ class IpMacUtilsTest {
     }
 
     @Test
-    void getAllIpByHost() {
-    }
-
-    @Test
     void convertIntToIpV4Mask() {
     }
 
@@ -162,10 +158,6 @@ class IpMacUtilsTest {
 
     @Test
     void getSubnetAddressForIpV4() {
-    }
-
-    @Test
-    void getFirstIpAddress() {
     }
 
     @Test

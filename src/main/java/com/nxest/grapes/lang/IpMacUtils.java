@@ -409,12 +409,6 @@ public class IpMacUtils {
         return isAllIpv4 || isAllIpv6;
     }
 
-
-//    public static int compareIpV4(String ip1, String ip2) {
-//        return (int) compareIpV4(ip1, ip2, false);
-//    }
-
-
     public static int compareIpV6(String ip1, String ip2) {
         String ipa1;
         String ipa2;
@@ -509,21 +503,6 @@ public class IpMacUtils {
         }
     }
 
-
-    public static List<String> getAllIpByHost(String hostName) {
-        List<String> ipList = new ArrayList<>();
-        try {
-            InetAddress[] addresses = InetAddress.getAllByName(hostName);
-            for (InetAddress address : addresses) {
-                ipList.add(address.getHostAddress());
-            }
-            return ipList;
-        } catch (UnknownHostException e) {
-            return ipList;
-        }
-    }
-
-
     public static String convertIntToIpV4Mask(int length) {
         if (length >= 32) {
             return "255.255.255.255";
@@ -617,14 +596,6 @@ public class IpMacUtils {
             }
         }
         return subNet.toString();
-    }
-
-    public static String getFirstIpAddress(String subnetAddr) {
-        if (!isLegalIpV4(subnetAddr)) {
-            throw new IllegalArgumentException("Illegal arguments : " + subnetAddr);
-        }
-        long subnetAddrVal = ipV4ToLong(subnetAddr);
-        return longToIpV4(subnetAddrVal + 1L);
     }
 
     public static int getIpMaskBits(String mask) {

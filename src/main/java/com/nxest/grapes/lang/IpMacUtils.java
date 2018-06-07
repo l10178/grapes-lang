@@ -16,7 +16,7 @@ public class IpMacUtils {
     private static final Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
     private static final Pattern MAC3 = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
     private static final Pattern MAC3_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}/([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
-    private static final Pattern MAC6 = Pattern.compile("([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}");
+    private static final Pattern MAC6 = Pattern.compile("([a-fA-F0-9]{1,2}[-:]){5}[a-fA-F0-9]{1,2}");
     private static final Pattern MAC6COLON = Pattern.compile("(([a-fA-F0-9]{1,2}:){5}[a-fA-F0-9]{1,2})");
     private static final Pattern MAC6_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}/([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}");
 
@@ -193,7 +193,6 @@ public class IpMacUtils {
                     part1hasDot++;
                 }
             }
-            // ipv6 has most 7 dot
             return part1.shiftLeft(16 * (7 - part1hasDot)).add(part2);
         }
         String[] str = ipv6.split(COLON);
@@ -243,6 +242,9 @@ public class IpMacUtils {
 
     /**
      * convert string mac to long
+     * <pre>
+     *      60-a0-10-50-d0-30 -> 106240584765488L
+     * </pre>
      *
      * @param mac mac string
      * @return long value
@@ -274,12 +276,15 @@ public class IpMacUtils {
 
     /**
      * convert long mac to string
+     * <pre>
+     *     106240584765488L -> 60-a0-10-50-d0-30
+     * </pre>
      *
      * @param longMac mac long value
      * @return string value
      */
     public static String longToMac(long longMac) {
-        char[] strs = new char[12];
+        char[] strArray = new char[12];
 
         for (int sb = 11; sb >= 0; --sb) {
             char i = (char) ((int) (longMac & 15L));
@@ -289,17 +294,16 @@ public class IpMacUtils {
                 i = (char) (i + 48);
             }
 
-            strs[sb] = i;
+            strArray[sb] = i;
             if (sb > 0) {
                 longMac >>= 4;
             }
         }
 
         StringBuilder mac = new StringBuilder();
-
-        for (int i = 0; i < strs.length; ++i) {
-            mac.append(strs[i]);
-            if (i != strs.length - 1 && (i + 1) % 2 == 0) {
+        for (int i = 0; i < strArray.length; ++i) {
+            mac.append(strArray[i]);
+            if (i != strArray.length - 1 && (i + 1) % 2 == 0) {
                 mac.append("-");
             }
         }
@@ -307,6 +311,20 @@ public class IpMacUtils {
         return mac.toString();
     }
 
+    /**
+     * Checks if legal MAC
+     * <pre>
+     *      assertTrue(IpMacUtils.isLegalMac("60:a0:10:50:d0:30"));
+     *      assertTrue(IpMacUtils.isLegalMac("60:A0:10:50:D0:30"));
+     *      assertTrue(IpMacUtils.isLegalMac(60-a0-10-50-d0-30));
+     *      assertFalse(IpMacUtils.isLegalMac(""));
+     *      assertFalse(IpMacUtils.isLegalMac("12:34::"));
+     *      assertFalse(IpMacUtils.isLegalMac("GG:a0:10:50:d0:30"));
+     * </pre>
+     *
+     * @param mac the mac to check
+     * @return {@code true} if legal MAC
+     */
     public static boolean isLegalMac(final String mac) {
         return isNotBlank(mac) && MAC6.matcher(mac.trim()).matches();
     }

@@ -16,6 +16,8 @@ class IpMacUtilsTest {
     private static final String IPV6_TEST_STR = "ff06:0:0:0:0:0:0:c3";
     private static final BigInteger IPV6_TEST_NUM = new BigInteger("338984292706304756556241983349463187651");
     private static final String IPV6_TEST_STR_SHORT = "ff06::c3";
+    public static final String MAC_TEST_STR = "60:a0:10:50:d0:30";
+    public static final long MAC_TEST_NUM = 106240584765488L;
 
     @Test
     void ipV4ToLong() {
@@ -94,6 +96,29 @@ class IpMacUtilsTest {
         assertEquals(BigInteger.ZERO, IpMacUtils.compareIpV6(IPV6_TEST_STR, IPV6_TEST_STR_SHORT));
         assertEquals(BigInteger.ONE, IpMacUtils.compareIpV6("ff06::c3", "ff06::c4"));
         assertEquals(BigInteger.valueOf(65536), IpMacUtils.compareIpV6("ff06::c3", "ff06:0:0:0:0:0:1:c3"));
+    }
+
+    @Test
+    void macToLong() {
+        assertEquals(MAC_TEST_NUM, IpMacUtils.macToLong(MAC_TEST_STR));
+        assertEquals(IpMacUtils.macToLong(MAC_TEST_STR), IpMacUtils.macToLong(MAC_TEST_STR.toUpperCase()));
+        assertEquals(MAC_TEST_NUM, IpMacUtils.macToLong(MAC_TEST_STR.replace(':', '-')));
+    }
+
+    @Test
+    void longToMac() {
+        assertEquals(MAC_TEST_STR.replace(':', '-'), IpMacUtils.longToMac(MAC_TEST_NUM));
+    }
+
+    @Test
+    void isLegalMac() {
+        assertTrue(IpMacUtils.isLegalMac(MAC_TEST_STR));
+        assertTrue(IpMacUtils.isLegalMac(MAC_TEST_STR.toUpperCase()));
+        assertTrue(IpMacUtils.isLegalMac(MAC_TEST_STR.replace(':', '-')));
+
+        assertFalse(IpMacUtils.isLegalMac(""));
+        assertFalse(IpMacUtils.isLegalMac("12:34::"));
+        assertFalse(IpMacUtils.isLegalMac("GG:a0:10:50:d0:30"));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.nxest.grapes.lang;
 
+import java.math.BigInteger;
 import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -62,33 +63,31 @@ public class IpMacUtils {
 
 
     /**
-     * convert string IPV4 to long. 192.168.0.1 -> 3232235521L
+     * convert string IPV4 to long.
+     * <pre>
+     *     192.168.0.1 -> 3232235521L
+     * </pre>
      *
      * @param hostIp ip address
      * @return the long value,if ip is invalid, will return 0L
      */
     public static long ipV4ToLong(String hostIp) {
-
-        if (isBlank(hostIp)) {
-            throw new IllegalArgumentException("IP can not be blank.");
-        }
         if (!isLegalIpV4(hostIp)) {
             return IP_ZERO;
         }
-
         String[] parts = hostIp.trim().split(DOT);
-
         long ipLong = IP_ZERO;
-
         for (String part : parts) {
             ipLong = ipLong << 8 | Long.valueOf(part);
         }
-
         return ipLong;
     }
 
     /**
-     * conver long IPV4 to string. 3232235521L -> 192.168.0.1
+     * conver long IPV4 to string.
+     * <pre>
+     *     3232235521L -> 192.168.0.1
+     * </pre>
      *
      * @param longIp IP long value
      * @return IP string value
@@ -122,35 +121,83 @@ public class IpMacUtils {
         return IPV4_PATTERN.matcher(ip.trim()).matches();
     }
 
-    /**
-     * convert string IpV6 to double
-     *
-     * @param strIpv6 string IpV6
-     * @return the double value,if ip is invalid, will return 0.0D
-     */
-    public static double ipV6ToDouble(String strIpv6) {
-        try {
-            String ue = Inet6Address.getByName(strIpv6).getHostAddress();
-            List<String> ipSections = new ArrayList<>();
-            String[] fullIpv6 = ue.split(COLON);
-            for (String ipSub : fullIpv6) {
-                ipSections.add(ipSub.length() < 4 ? repeat('0', 4 - ipSub.length()) + ipSub : ipSub);
-            }
+    public static BigInteger ipV6toBigInteger(String ipv6) {
+        if (!isLegalIpV6(ipv6)) {
+            return BigInteger.ZERO;
+        }
 
-            String ipJoin = join(ipSections);
-            double result = 0.0D;
-
-            for (int i = 0; i < ipJoin.length(); ++i) {
-                String s = ipJoin.substring(i, i + 1);
-                if (Integer.valueOf(s, 16) != 0) {
-                    result += Math.pow(16.0D, (double) (ipJoin.length() - 1 - i)) * (double) Integer.valueOf(s, 16);
+        int compressIndex = ipv6.indexOf("::");
+        if (compressIndex != -1) {
+            String part1s = ipv6.substring(0, compressIndex);
+            String part2s = ipv6.substring(compressIndex + 1);
+            BigInteger part1 = ipV6toBigInteger(part1s);
+            BigInteger part2 = ipV6toBigInteger(part2s);
+            int part1hasDot = 0;
+            char ch[] = part1s.toCharArray();
+            for (char c : ch) {
+                if (c == ':') {
+                    part1hasDot++;
                 }
             }
-            return result;
-        } catch (UnknownHostException e) {
-            throw new NumberFormatException(strIpv6 + " is not a IPv6 address.");
+            // ipv6 has most 7 dot
+            return part1.shiftLeft(16 * (7 - part1hasDot)).add(part2);
         }
+        String[] str = ipv6.split(":");
+        BigInteger big = BigInteger.ZERO;
+        for (int i = 0; i < str.length; i++) {
+            //::1
+            if (str[i].isEmpty()) {
+                str[i] = "0";
+            }
+            big = big.add(BigInteger.valueOf(Long.valueOf(str[i], 16))
+                .shiftLeft(16 * (str.length - i - 1)));
+        }
+        return big;
     }
+
+    public static String bigIntegerToIpV6(BigInteger big) {
+        StringBuilder str = new StringBuilder();
+        BigInteger ff = BigInteger.valueOf(0xffff);
+        for (int i = 0; i < 8; i++) {
+            str.insert(0, big.and(ff).toString(16) + ":");
+
+            big = big.shiftRight(16);
+        }
+        //the last :
+        str = new StringBuilder(str.substring(0, str.length() - 1));
+
+        return str.toString().replaceFirst("(^|:)(0+(:|$)){2,8}", "::");
+    }
+
+//    /**
+//     * convert string IpV6 to double
+//     *
+//     * @param strIpv6 string IpV6
+//     * @return the double value,if ip is invalid, will return 0.0D
+//     */
+//    public static double ipV6ToDouble(String strIpv6) {
+//        try {
+//            String ue = Inet6Address.getByName(strIpv6).getHostAddress();
+//            List<String> ipSections = new ArrayList<>();
+//            String[] fullIpv6 = ue.split(COLON);
+//            for (String ipSub : fullIpv6) {
+//                ipSections.add(ipSub.length() < 4 ? repeat('0', 4 - ipSub.length()) + ipSub : ipSub);
+//            }
+//
+//            String ipJoin = join(ipSections);
+//            double result = 0.0D;
+//
+//            for (int i = 0; i < ipJoin.length(); ++i) {
+//                String s = ipJoin.substring(i, i + 1);
+//                if (Integer.valueOf(s, 16) != 0) {
+//                    result += Math.pow(16.0D, (double) (ipJoin.length() - 1 - i)) * (double) Integer.valueOf(s, 16);
+//                }
+//            }
+//            return result;
+//        } catch (UnknownHostException e) {
+//            throw new NumberFormatException(strIpv6 + " is not a IPv6 address.");
+//        }
+//    }
 
     /**
      * convert string mac to long
@@ -456,9 +503,9 @@ public class IpMacUtils {
         return ipV4ToLong(endIp) - ipV4ToLong(startIp);
     }
 
-    public static double rangeBetweenIpV6(String startIp, String endIp) {
-        return ipV6ToDouble(endIp) - ipV6ToDouble(startIp);
-    }
+//    public static double rangeBetweenIpV6(String startIp, String endIp) {
+//        return ipV6ToDouble(endIp) - ipV6ToDouble(startIp);
+//    }
 
 
     public static boolean isLegalIpV6(String ipv6) {
@@ -728,13 +775,6 @@ public class IpMacUtils {
 
     private static int indexOf(CharSequence cs, CharSequence searchChar, int start) {
         return cs.toString().indexOf(searchChar.toString(), start);
-    }
-
-    private static String join(Collection collection) {
-        if (collection == null) {
-            return null;
-        }
-        return join(collection, "");
     }
 
     private static String join(Collection collection, String separator) {

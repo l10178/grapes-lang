@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 public class IpMacUtils {
 
     public static final String IPV4_REGEX = "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\x2e){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
-    public static final String IPV6_ADDRESS_PATTERN = "(([a-fA-F0-9]{1,4}):){7}([a-fA-F0-9]{1,4})";
     public static final Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
     public static final Pattern MAC3 = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
     public static final Pattern MAC3_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}/([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
@@ -65,7 +64,7 @@ public class IpMacUtils {
     }
 
     /**
-     * conver long IPV4 to string.
+     * convert long IPV4 to string.
      * <pre>
      *     3232235521L -> 192.168.0.1
      * </pre>

@@ -115,7 +115,7 @@ public class IpMacUtils {
      * @return Ip class
      * @throws IllegalArgumentException throw if not legal IP
      */
-    public static IpClassEnum getClassOfIpAdress(final String ipv4) throws IllegalArgumentException {
+    public static IpClassEnum getClassOfIp(final String ipv4) throws IllegalArgumentException {
         if (!isLegalIpV4(ipv4)) {
             throw new IllegalArgumentException("Illegal arguments : " + ipv4);
         }
@@ -227,6 +227,17 @@ public class IpMacUtils {
         str = new StringBuilder(str.substring(0, str.length() - 1));
 
         return str.toString().replaceFirst("(^|:)(0+(:|$)){2,8}", "::");
+    }
+
+    /**
+     * compare two IPV6
+     *
+     * @param ip1 ip1
+     * @param ip2 ip2
+     * @return ip2 - ip1
+     */
+    public static BigInteger compareIpV6(final String ip1, final String ip2) {
+        return ipV6toBigInteger(ip2).subtract(ipV6toBigInteger(ip1));
     }
 
 
@@ -423,47 +434,12 @@ public class IpMacUtils {
         return isAllIpv4 || isAllIpv6;
     }
 
-    public static int compareIpV6(final String ip1, String ip2) {
-        String ipa1;
-        String ipa2;
-
-        try {
-            ipa1 = Inet6Address.getByName(ip1).getHostAddress();
-            ipa2 = Inet6Address.getByName(ip2).getHostAddress();
-        } catch (Exception e) {
-            return 0;
-        }
-
-        List<String> ip1Sections = new ArrayList<>();
-        String[] ip2Sections = ipa1.split(COLON);
-        int fullIp1 = ip2Sections.length;
-
-        int fullIp2;
-        for (fullIp2 = 0; fullIp2 < fullIp1; ++fullIp2) {
-            String ip2Section = ip2Sections[fullIp2];
-            ip1Sections.add(ip2Section.length() < 4 ? repeat('0', 4 - ip2Section.length()) + ip2Section : ip2Section);
-        }
-
-        List<String> ipa2List = new ArrayList<>();
-        String[] ip2Array = ipa2.split(COLON);
-        fullIp2 = ip2Array.length;
-
-        for (int i = 0; i < fullIp2; ++i) {
-            String section = ip2Array[i];
-            ipa2List.add(section.length() < 4 ? repeat('0', 4 - section.length()) + section : section);
-        }
-
-        String ipa1Joined = join(ip1Sections, COLON);
-        String ipa2Joined = join(ipa2List, COLON);
-        return Integer.compare(ipa1Joined.compareTo(ipa2Joined), 0);
-    }
-
 
     public static long compareIp(final String ip1, String ip2) {
         if (isLegalIpV4(ip1) && isLegalIpV4(ip2)) {
             return compareIpV4(ip1, ip2);
         } else if (isLegalIpV6(ip1) && isLegalIpV6(ip2)) {
-            return compareIpV6(ip1, ip2);
+            return compareIpV6(ip1, ip2).longValue();
         } else {
             throw new NumberFormatException(ip1 + " and " + ip2 + " are not same IP type.");
         }

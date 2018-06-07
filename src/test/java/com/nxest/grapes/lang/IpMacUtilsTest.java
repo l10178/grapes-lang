@@ -36,6 +36,33 @@ class IpMacUtilsTest {
         assertFalse(IpMacUtils.isLegalIpV4("fe80::6942:2fda:2942:24d2%10"));
     }
 
+
+    @Test
+    void getClassOfIpAdress() {
+
+        assertEquals(IpClassEnum.A, IpMacUtils.getClassOfIpAdress("0.0.0.0"));
+        assertEquals(IpClassEnum.A, IpMacUtils.getClassOfIpAdress("120.123.124.125"));
+        assertEquals(IpClassEnum.A, IpMacUtils.getClassOfIpAdress("127.0.0.1"));
+        assertEquals(IpClassEnum.A, IpMacUtils.getClassOfIpAdress("127.255.255.255"));
+
+        assertEquals(IpClassEnum.B, IpMacUtils.getClassOfIpAdress("128.0.0.0"));
+        assertEquals(IpClassEnum.B, IpMacUtils.getClassOfIpAdress("129.123.124.125"));
+        assertEquals(IpClassEnum.B, IpMacUtils.getClassOfIpAdress("191.255.255.255"));
+
+        assertEquals(IpClassEnum.C, IpMacUtils.getClassOfIpAdress("192.0.0.0"));
+        assertEquals(IpClassEnum.C, IpMacUtils.getClassOfIpAdress("200.123.124.125"));
+        assertEquals(IpClassEnum.C, IpMacUtils.getClassOfIpAdress("223.255.255.255"));
+
+        assertEquals(IpClassEnum.D, IpMacUtils.getClassOfIpAdress("224.0.0.0"));
+        assertEquals(IpClassEnum.D, IpMacUtils.getClassOfIpAdress("225.123.124.125"));
+        assertEquals(IpClassEnum.D, IpMacUtils.getClassOfIpAdress("239.255.255.255"));
+
+        assertEquals(IpClassEnum.E, IpMacUtils.getClassOfIpAdress("240.0.0.0"));
+        assertEquals(IpClassEnum.E, IpMacUtils.getClassOfIpAdress("241.123.124.125"));
+        assertEquals(IpClassEnum.E, IpMacUtils.getClassOfIpAdress("255.255.255.255"));
+
+    }
+
     @Test
     void ipV6ToDouble() {
     }
@@ -144,9 +171,6 @@ class IpMacUtilsTest {
     void convertIntToV6Mask() {
     }
 
-    @Test
-    void getClassOfIpAdress() {
-    }
 
     @Test
     void getSubnetAddressForIpV4() {

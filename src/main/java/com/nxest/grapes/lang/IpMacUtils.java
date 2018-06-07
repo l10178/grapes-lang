@@ -26,26 +26,7 @@ public class IpMacUtils {
      * default value 0 for invalid IP
      */
     public static final long IP_ZERO = 0L;
-    /**
-     * Class A IP, 0.0.0.0 – 127.255.255.255
-     */
-    public static final String IP_CLASS_A = "A";
-    /**
-     * Class B IP, 128.0.0.0 – 191.255.255.255
-     */
-    public static final String IP_CLASS_B = "B";
-    /**
-     * Class C IP, 192.0.0.0 – 223.255.255.255
-     */
-    public static final String IP_CLASS_C = "C";
-    /**
-     * Class D IP, 224.0.0.0 – 239.255.255.255
-     */
-    public static final String IP_CLASS_D = "D";
-    /**
-     * Class E IP, 240.0.0.0 – 255.255.255.255
-     */
-    public static final String IP_CLASS_E = "E";
+
     /**
      * dot <code>.</code> value.
      */
@@ -122,12 +103,20 @@ public class IpMacUtils {
     }
 
     /**
-     * Get IPV4 class type ,ABCDE
+     * Get IPV4 class type, A B C D E
+     * <pre>
+     *     "A", "0.0.0.0-127.255.255.255"
+     *     "B", "128.0.0.0–191.255.255.255"
+     *     "C", "192.0.0.0–223.255.255.255"
+     *     "D", "224.0.0.0–239.255.255.255"
+     *     "E", "240.0.0.0–255.255.255.255"
+     * </pre>
      *
-     * @param ipv4
-     * @return
+     * @param ipv4 the IP to check,should be legal IP
+     * @return Ip class
+     * @throws IllegalArgumentException throw if not legal IP
      */
-    public static String getClassOfIpAdress(String ipv4) {
+    public static IpClassEnum getClassOfIpAdress(String ipv4) throws IllegalArgumentException {
         if (!isLegalIpV4(ipv4)) {
             throw new IllegalArgumentException("Illegal arguments : " + ipv4);
         }
@@ -144,23 +133,23 @@ public class IpMacUtils {
         char[] binArr = binStr.toString().toCharArray();
         if (binArr.length == 8) {
             if (48 == binArr[0]) {
-                return IP_CLASS_A;
+                return IpClassEnum.A;
             }
 
             if (49 == binArr[0] && 48 == binArr[1]) {
-                return IP_CLASS_B;
+                return IpClassEnum.B;
             }
 
             if (49 == binArr[0] && 49 == binArr[1] && 48 == binArr[2]) {
-                return IP_CLASS_C;
+                return IpClassEnum.C;
             }
 
             if (49 == binArr[0] && 49 == binArr[1] && 49 == binArr[2] && 48 == binArr[3]) {
-                return IP_CLASS_D;
+                return IpClassEnum.D;
             }
 
             if (49 == binArr[0] && 49 == binArr[1] && 49 == binArr[2] && 49 == binArr[3]) {
-                return IP_CLASS_E;
+                return IpClassEnum.E;
             }
         }
         throw new IllegalArgumentException("Illegal arguments : " + ipv4);

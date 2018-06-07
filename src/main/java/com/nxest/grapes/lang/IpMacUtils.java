@@ -155,6 +155,18 @@ public class IpMacUtils {
         throw new IllegalArgumentException("Illegal arguments : " + ipv4);
     }
 
+    /**
+     * compare IPV4
+     *
+     * @param ip1 ip1
+     * @param ip2 ip2
+     * @return ip2 long value - ip1 long value
+     */
+    public static long compareIpV4(String ip1, String ip2) {
+        return ipV4ToLong(ip2) - ipV4ToLong(ip1);
+    }
+
+
     public static BigInteger ipV6toBigInteger(String ipv6) {
         if (!isLegalIpV6(ipv6)) {
             return BigInteger.ZERO;
@@ -398,23 +410,9 @@ public class IpMacUtils {
     }
 
 
-    public static int compareIpV4(String ip1, String ip2) {
-        return (int) compareIpV4(ip1, ip2, false);
-    }
-
-    public static long compareIpV4(String ip1, String ip2, boolean flag) {
-        if (ip1 == null) {
-            ip1 = "0.0.0.0";
-        }
-
-        if (ip2 == null) {
-            ip2 = "0.0.0.0";
-        }
-
-        long ip1Long = ipV4ToLong(ip1);
-        long ip2Long = ipV4ToLong(ip2);
-        return flag ? ip2Long - ip1Long : (ip1Long < ip2Long ? -1L : (ip1Long > ip2Long ? 1L : 0L));
-    }
+//    public static int compareIpV4(String ip1, String ip2) {
+//        return (int) compareIpV4(ip1, ip2, false);
+//    }
 
 
     public static int compareIpV6(String ip1, String ip2) {
@@ -453,7 +451,7 @@ public class IpMacUtils {
     }
 
 
-    public static int compareIp(String ip1, String ip2) {
+    public static long compareIp(String ip1, String ip2) {
         if (isLegalIpV4(ip1) && isLegalIpV4(ip2)) {
             return compareIpV4(ip1, ip2);
         } else if (isLegalIpV6(ip1) && isLegalIpV6(ip2)) {
@@ -462,15 +460,6 @@ public class IpMacUtils {
             throw new NumberFormatException(ip1 + " and " + ip2 + " are not same IP type.");
         }
     }
-
-    public static long rangeBetweenIpV4(String startIp, String endIp) {
-        return ipV4ToLong(endIp) - ipV4ToLong(startIp);
-    }
-
-//    public static double rangeBetweenIpV6(String startIp, String endIp) {
-//        return ipV6ToDouble(endIp) - ipV6ToDouble(startIp);
-//    }
-
 
     public static boolean isLegalIpV6(String ipv6) {
         return isLegalIpV6Common(ipv6) || isLegalIPV6Compatible(ipv6);

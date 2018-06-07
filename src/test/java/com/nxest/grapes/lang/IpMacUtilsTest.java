@@ -24,7 +24,6 @@ class IpMacUtilsTest {
         assertEquals("0.0.0.0", IpMacUtils.longToIpV4(0L));
     }
 
-
     @Test
     void isLegalIpV4() {
         assertTrue(IpMacUtils.isLegalIpV4(IP_TEST_STR));
@@ -35,7 +34,6 @@ class IpMacUtilsTest {
         assertFalse(IpMacUtils.isLegalIpV4("256.1.2.3"));
         assertFalse(IpMacUtils.isLegalIpV4("fe80::6942:2fda:2942:24d2%10"));
     }
-
 
     @Test
     void getClassOfIpAdress() {
@@ -61,6 +59,18 @@ class IpMacUtilsTest {
         assertEquals(IpClassEnum.E, IpMacUtils.getClassOfIpAdress("241.123.124.125"));
         assertEquals(IpClassEnum.E, IpMacUtils.getClassOfIpAdress("255.255.255.255"));
 
+    }
+
+    @Test
+    void compareIpV4() {
+        assertEquals(0, IpMacUtils.compareIpV4("0.0.0.0", "0.0.0.0"));
+        assertEquals(0, IpMacUtils.compareIpV4("255.255.255.255", "255.255.255.255"));
+        assertEquals(0, IpMacUtils.compareIpV4("192.168.0.1", "192.168.0.1"));
+        assertEquals(1, IpMacUtils.compareIpV4("192.168.0.1", "192.168.0.2"));
+        assertEquals(256, IpMacUtils.compareIpV4("192.168.1.0", "192.168.2.0"));
+        assertEquals(65536, IpMacUtils.compareIpV4("192.168.1.1", "192.169.1.1"));
+        assertEquals(16842752, IpMacUtils.compareIpV4("192.168.1.1", "193.169.1.1"));
+        assertEquals(-256, IpMacUtils.compareIpV4("192.168.3.0", "192.168.2.0"));
     }
 
 
@@ -104,13 +114,6 @@ class IpMacUtilsTest {
     void isSameIpType() {
     }
 
-    @Test
-    void compareIpV4() {
-    }
-
-    @Test
-    void compareIpV41() {
-    }
 
     @Test
     void compareIpV6() {
@@ -118,14 +121,6 @@ class IpMacUtilsTest {
 
     @Test
     void compareIp() {
-    }
-
-    @Test
-    void rangeBetweenIpV4() {
-    }
-
-    @Test
-    void rangeBetweenIpV6() {
     }
 
     @Test

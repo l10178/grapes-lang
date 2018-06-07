@@ -40,7 +40,7 @@ public class IpMacUtils {
     /**
      * convert string IPV4 to long.
      * <pre>
-     *     192.168.0.1 -> 3232235521L
+     *     192.168.0.1 to 3232235521L
      * </pre>
      *
      * @param hostIp ip address
@@ -61,7 +61,7 @@ public class IpMacUtils {
     /**
      * convert long IPV4 to string.
      * <pre>
-     *     3232235521L -> 192.168.0.1
+     *     3232235521L to 192.168.0.1
      * </pre>
      *
      * @param longIp IP long value
@@ -238,7 +238,7 @@ public class IpMacUtils {
     /**
      * convert string mac to long
      * <pre>
-     *      60-a0-10-50-d0-30 -> 106240584765488L
+     *      60-a0-10-50-d0-30 to 106240584765488L
      * </pre>
      *
      * @param mac mac string
@@ -272,7 +272,7 @@ public class IpMacUtils {
     /**
      * convert long mac to string
      * <pre>
-     *     106240584765488L -> 60-a0-10-50-d0-30
+     *     106240584765488L to 60-a0-10-50-d0-30
      * </pre>
      *
      * @param longMac mac long value

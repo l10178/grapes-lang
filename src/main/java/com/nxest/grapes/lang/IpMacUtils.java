@@ -29,23 +29,23 @@ public class IpMacUtils {
     /**
      * Class A IP, 0.0.0.0 – 127.255.255.255
      */
-    public static final int IP_CLASS_A = 1;
+    public static final String IP_CLASS_A = "A";
     /**
      * Class B IP, 128.0.0.0 – 191.255.255.255
      */
-    public static final int IP_CLASS_B = 2;
+    public static final String IP_CLASS_B = "B";
     /**
      * Class C IP, 192.0.0.0 – 223.255.255.255
      */
-    public static final int IP_CLASS_C = 3;
+    public static final String IP_CLASS_C = "C";
     /**
      * Class D IP, 224.0.0.0 – 239.255.255.255
      */
-    public static final int IP_CLASS_D = 4;
+    public static final String IP_CLASS_D = "D";
     /**
      * Class E IP, 240.0.0.0 – 255.255.255.255
      */
-    public static final int IP_CLASS_E = 5;
+    public static final String IP_CLASS_E = "E";
     /**
      * dot <code>.</code> value.
      */
@@ -119,6 +119,51 @@ public class IpMacUtils {
             return false;
         }
         return IPV4_PATTERN.matcher(ip.trim()).matches();
+    }
+
+    /**
+     * Get IPV4 class type ,ABCDE
+     *
+     * @param ipv4
+     * @return
+     */
+    public static String getClassOfIpAdress(String ipv4) {
+        if (!isLegalIpV4(ipv4)) {
+            throw new IllegalArgumentException("Illegal arguments : " + ipv4);
+        }
+        String[] ipSegs = ipv4.split(DOT);
+        String ipSeg = ipSegs[0];
+        int ipSegDigit = Integer.parseInt(ipSeg);
+        StringBuilder binStr = new StringBuilder(Integer.toBinaryString(ipSegDigit));
+        String tmpStr = binStr.toString();
+
+        for (int binaryChars = 0; binaryChars < 8 - tmpStr.length(); ++binaryChars) {
+            binStr.insert(0, "0");
+        }
+
+        char[] binArr = binStr.toString().toCharArray();
+        if (binArr.length == 8) {
+            if (48 == binArr[0]) {
+                return IP_CLASS_A;
+            }
+
+            if (49 == binArr[0] && 48 == binArr[1]) {
+                return IP_CLASS_B;
+            }
+
+            if (49 == binArr[0] && 49 == binArr[1] && 48 == binArr[2]) {
+                return IP_CLASS_C;
+            }
+
+            if (49 == binArr[0] && 49 == binArr[1] && 49 == binArr[2] && 48 == binArr[3]) {
+                return IP_CLASS_D;
+            }
+
+            if (49 == binArr[0] && 49 == binArr[1] && 49 == binArr[2] && 49 == binArr[3]) {
+                return IP_CLASS_E;
+            }
+        }
+        throw new IllegalArgumentException("Illegal arguments : " + ipv4);
     }
 
     public static BigInteger ipV6toBigInteger(String ipv6) {
@@ -614,44 +659,6 @@ public class IpMacUtils {
         return Integer.toHexString(result);
     }
 
-    public static int getClassOfIpAdress(String ipv4) {
-        if (!isLegalIpV4(ipv4)) {
-            throw new IllegalArgumentException("Illegal arguments : " + ipv4);
-        }
-        String[] ipSegs = ipv4.split(DOT);
-        String ipSeg = ipSegs[0];
-        int ipSegDigit = Integer.parseInt(ipSeg);
-        StringBuilder binStr = new StringBuilder(Integer.toBinaryString(ipSegDigit));
-        String tmpStr = binStr.toString();
-
-        for (int binaryChars = 0; binaryChars < 8 - tmpStr.length(); ++binaryChars) {
-            binStr.insert(0, "0");
-        }
-
-        char[] binArr = binStr.toString().toCharArray();
-        if (binArr.length == 8) {
-            if (48 == binArr[0]) {
-                return IP_CLASS_A;
-            }
-
-            if (49 == binArr[0] && 48 == binArr[1]) {
-                return IP_CLASS_B;
-            }
-
-            if (49 == binArr[0] && 49 == binArr[1] && 48 == binArr[2]) {
-                return IP_CLASS_C;
-            }
-
-            if (49 == binArr[0] && 49 == binArr[1] && 49 == binArr[2] && 48 == binArr[3]) {
-                return IP_CLASS_D;
-            }
-
-            if (49 == binArr[0] && 49 == binArr[1] && 49 == binArr[2] && 49 == binArr[3]) {
-                return IP_CLASS_E;
-            }
-        }
-        throw new IllegalArgumentException("Illegal arguments : " + ipv4);
-    }
 
     public static String getSubnetAddressForIpV4(String ip, String v4Mask) {
         if (!isLegalIpV4(ip) || !isLegalIpV4(v4Mask)) {

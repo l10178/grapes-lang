@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
  */
 public class IpMacUtils {
 
-    public static final String IPV4_REGEX = "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\x2e){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
-    public static final Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
-    public static final Pattern MAC3 = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
-    public static final Pattern MAC3_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}/([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
-    public static final Pattern MAC6 = Pattern.compile("([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}");
-    public static final Pattern MAC6COLON = Pattern.compile("(([a-fA-F0-9]{1,2}:){5}[a-fA-F0-9]{1,2})");
-    public static final Pattern MAC6_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}/([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}");
+    private static final String IPV4_REGEX = "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\x2e){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
+    private static final Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
+    private static final Pattern MAC3 = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
+    private static final Pattern MAC3_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}/([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
+    private static final Pattern MAC6 = Pattern.compile("([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}");
+    private static final Pattern MAC6COLON = Pattern.compile("(([a-fA-F0-9]{1,2}:){5}[a-fA-F0-9]{1,2})");
+    private static final Pattern MAC6_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}/([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}");
 
 
     /**
@@ -51,13 +51,13 @@ public class IpMacUtils {
      * @param hostIp ip address
      * @return the long value,if ip is invalid, will return 0L
      */
-    public static long ipV4ToLong(String hostIp) {
+    public static long ipV4ToLong(final String hostIp) {
         if (!isLegalIpV4(hostIp)) {
             return IP_ZERO;
         }
         String[] parts = hostIp.trim().split(DOT);
         long ipLong = IP_ZERO;
-        for (String part : parts) {
+        for (final String part : parts) {
             ipLong = ipLong << 8 | Long.valueOf(part);
         }
         return ipLong;
@@ -94,7 +94,7 @@ public class IpMacUtils {
      * @param ip the ip to check, may be null
      * @return {@code true} if legal IPV4
      */
-    public static boolean isLegalIpV4(String ip) {
+    public static boolean isLegalIpV4(final String ip) {
         if (isBlank(ip)) {
             return false;
         }
@@ -115,7 +115,7 @@ public class IpMacUtils {
      * @return Ip class
      * @throws IllegalArgumentException throw if not legal IP
      */
-    public static IpClassEnum getClassOfIpAdress(String ipv4) throws IllegalArgumentException {
+    public static IpClassEnum getClassOfIpAdress(final String ipv4) throws IllegalArgumentException {
         if (!isLegalIpV4(ipv4)) {
             throw new IllegalArgumentException("Illegal arguments : " + ipv4);
         }
@@ -161,22 +161,31 @@ public class IpMacUtils {
      * @param ip2 ip2
      * @return ip2 long value - ip1 long value
      */
-    public static long compareIpV4(String ip1, String ip2) {
+    public static long compareIpV4(final String ip1, String ip2) {
         return ipV4ToLong(ip2) - ipV4ToLong(ip1);
     }
 
 
-    public static BigInteger ipV6toBigInteger(String ipv6) {
+    /**
+     * convert String IPV6 to BigInteger
+     *
+     * @param ipv6 ipv6 string value
+     * @return ipv6 BigInteger value
+     */
+    public static BigInteger ipV6toBigInteger(final String ipv6) {
         if (!isLegalIpV6(ipv6)) {
             return BigInteger.ZERO;
         }
+        return ipV6toBigIntegerSum(ipv6);
+    }
 
+    private static BigInteger ipV6toBigIntegerSum(final String ipv6) {
         int compressIndex = ipv6.indexOf("::");
         if (compressIndex != -1) {
             String part1s = ipv6.substring(0, compressIndex);
             String part2s = ipv6.substring(compressIndex + 1);
-            BigInteger part1 = ipV6toBigInteger(part1s);
-            BigInteger part2 = ipV6toBigInteger(part2s);
+            BigInteger part1 = ipV6toBigIntegerSum(part1s);
+            BigInteger part2 = ipV6toBigIntegerSum(part2s);
             int part1hasDot = 0;
             char ch[] = part1s.toCharArray();
             for (char c : ch) {
@@ -187,7 +196,7 @@ public class IpMacUtils {
             // ipv6 has most 7 dot
             return part1.shiftLeft(16 * (7 - part1hasDot)).add(part2);
         }
-        String[] str = ipv6.split(":");
+        String[] str = ipv6.split(COLON);
         BigInteger big = BigInteger.ZERO;
         for (int i = 0; i < str.length; i++) {
             //::1
@@ -200,11 +209,17 @@ public class IpMacUtils {
         return big;
     }
 
+    /**
+     * convert BigInteger IPV6 to String
+     *
+     * @param big ipv6 BigInteger value
+     * @return ipv6 String value
+     */
     public static String bigIntegerToIpV6(BigInteger big) {
         StringBuilder str = new StringBuilder();
         BigInteger ff = BigInteger.valueOf(0xffff);
         for (int i = 0; i < 8; i++) {
-            str.insert(0, big.and(ff).toString(16) + ":");
+            str.insert(0, big.and(ff).toString(16) + COLON);
 
             big = big.shiftRight(16);
         }
@@ -221,7 +236,7 @@ public class IpMacUtils {
      * @param mac mac string
      * @return long value
      */
-    public static long macToLong(String mac) {
+    public static long macToLong(final String mac) {
         if (!isLegalMac(mac)) {
             return IP_ZERO;
         }
@@ -281,22 +296,22 @@ public class IpMacUtils {
         return mac.toString();
     }
 
-    public static boolean isLegalMac(String mac) {
+    public static boolean isLegalMac(final String mac) {
         return isNotBlank(mac) && MAC6.matcher(mac.trim()).matches();
     }
 
 
-    public static boolean isLegalMacWithMask(String mac) {
+    public static boolean isLegalMacWithMask(final String mac) {
         return isNotBlank(mac) && MAC6_WITH_MASK.matcher(mac.trim()).matches();
     }
 
 
-    public static boolean isLegalMac3(String mac) {
+    public static boolean isLegalMac3(final String mac) {
         return isNotBlank(mac) && MAC3.matcher(mac.trim()).matches();
     }
 
 
-    public static boolean isLegalMac3WithMask(String mac) {
+    public static boolean isLegalMac3WithMask(final String mac) {
         return isNotBlank(mac) && MAC3_WITH_MASK.matcher(mac.trim()).matches();
     }
 
@@ -308,7 +323,7 @@ public class IpMacUtils {
         String[] macs = mac.split(COLON);
         List<String> macList = new ArrayList<>();
 
-        for (String tmp : macs) {
+        for (final String tmp : macs) {
             int size = tmp.length();
             if (size > 2) {
                 for (int j = 0; j < size; j += 2) {
@@ -325,14 +340,14 @@ public class IpMacUtils {
         return join(macList, COLON);
     }
 
-    public static String normalizeMac(String mac) {
+    public static String normalizeMac(final String mac) {
         if (isBlank(mac) || !MAC6COLON.matcher(mac.trim()).matches()) {
             throw new NumberFormatException(mac + " is a invalid MAC address.");
         }
         String[] macs = mac.trim().split(COLON);
         List<String> macList = new ArrayList<>();
 
-        for (String newMac : macs) {
+        for (final String newMac : macs) {
             String macStr = newMac.trim();
             if (macStr.length() == 1) {
                 macStr = "0" + macStr;
@@ -344,7 +359,7 @@ public class IpMacUtils {
     }
 
 
-    public static boolean isLegalMask(String mask) {
+    public static boolean isLegalMask(final String mask) {
         if (isBlank(mask)) {
             return false;
         }
@@ -398,7 +413,7 @@ public class IpMacUtils {
     }
 
 
-    public static boolean isSameIpType(String me, String he) {
+    public static boolean isSameIpType(final String me, String he) {
         boolean meIsV4 = isLegalIpV4(me);
         boolean meIsV6 = isLegalIpV6(me);
         boolean heIsV4 = isLegalIpV4(he);
@@ -408,7 +423,7 @@ public class IpMacUtils {
         return isAllIpv4 || isAllIpv6;
     }
 
-    public static int compareIpV6(String ip1, String ip2) {
+    public static int compareIpV6(final String ip1, String ip2) {
         String ipa1;
         String ipa2;
 
@@ -444,7 +459,7 @@ public class IpMacUtils {
     }
 
 
-    public static long compareIp(String ip1, String ip2) {
+    public static long compareIp(final String ip1, String ip2) {
         if (isLegalIpV4(ip1) && isLegalIpV4(ip2)) {
             return compareIpV4(ip1, ip2);
         } else if (isLegalIpV6(ip1) && isLegalIpV6(ip2)) {
@@ -454,12 +469,12 @@ public class IpMacUtils {
         }
     }
 
-    public static boolean isLegalIpV6(String ipv6) {
+    public static boolean isLegalIpV6(final String ipv6) {
         return isLegalIpV6Common(ipv6) || isLegalIPV6Compatible(ipv6);
     }
 
 
-    public static boolean isLegalIpV6Common(String ip) {
+    public static boolean isLegalIpV6Common(final String ip) {
         try {
             InetAddress e = Inet6Address.getByName(ip);
             return e instanceof Inet6Address;
@@ -469,17 +484,17 @@ public class IpMacUtils {
     }
 
 
-    public static boolean isLegalIpV6All(String ip) {
+    public static boolean isLegalIpV6All(final String ip) {
         return isLegalIpV6Common(ip) || isLegalIPV6Compatible(ip) || isLegalIPV6Prefix(ip);
     }
 
 
-    public static boolean isLegalIPV6Compatible(String ip) {
+    public static boolean isLegalIPV6Compatible(final String ip) {
         return isLegalIpV6Common(ip) && (!isBlank(ip) && countMatches(ip, ".") == 3);
     }
 
 
-    public static boolean isLegalIPV6Prefix(String ip) {
+    public static boolean isLegalIPV6Prefix(final String ip) {
         if (isBlank(ip)) {
             return false;
         } else if (countMatches(ip, SLASH) == 1 && !ip.endsWith(SLASH)) {
@@ -520,11 +535,11 @@ public class IpMacUtils {
     }
 
 
-    public static int convertIpV4MaskToInt(String v4Mask) {
+    public static int convertIpV4MaskToInt(final String v4Mask) {
         String[] segs = v4Mask.split(DOT);
         StringBuilder strV4 = new StringBuilder();
 
-        for (String seg : segs) {
+        for (final String seg : segs) {
             strV4.append(Integer.toBinaryString(Integer.valueOf(seg)));
         }
 
@@ -548,7 +563,7 @@ public class IpMacUtils {
         }
     }
 
-    private static String convertBinaryToDecimal(String binary) {
+    private static String convertBinaryToDecimal(final String binary) {
         long result = 0L;
 
         for (int j = 0; j < binary.length(); ++j) {
@@ -561,7 +576,7 @@ public class IpMacUtils {
         return String.valueOf(result);
     }
 
-    private static String convertBinaryToHex(String binary) {
+    private static String convertBinaryToHex(final String binary) {
         int result = 0;
 
         for (int j = 0; j < binary.length(); ++j) {
@@ -575,7 +590,7 @@ public class IpMacUtils {
     }
 
 
-    public static String getSubnetAddressForIpV4(String ip, String v4Mask) {
+    public static String getSubnetAddressForIpV4(final String ip, String v4Mask) {
         if (!isLegalIpV4(ip) || !isLegalIpV4(v4Mask)) {
             throw new IllegalArgumentException("Illegal arguments : " + ip + "," + v4Mask);
         }
@@ -597,14 +612,14 @@ public class IpMacUtils {
         return subNet.toString();
     }
 
-    public static int getIpMaskBits(String mask) {
+    public static int getIpMaskBits(final String mask) {
         if (!isLegalIpV4(mask)) {
             return Integer.valueOf(mask);
         }
         String[] segs = mask.split(DOT);
         StringBuilder strV4 = new StringBuilder();
 
-        for (String seg : segs) {
+        for (final String seg : segs) {
             strV4.append(Integer.toBinaryString(Integer.valueOf(seg)));
         }
 

@@ -2,6 +2,8 @@ package com.nxest.grapes.lang;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -9,8 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class IpMacUtilsTest {
 
-    public static final String IP_TEST_STR = "192.168.0.1";
-    public static final long IP_TEST_LONG = 3232235521L;
+    private static final String IP_TEST_STR = "192.168.0.1";
+    private static final long IP_TEST_LONG = 3232235521L;
+    private static final String IPV6_TEST_STR = "ff06:0:0:0:0:0:0:c3";
+    private static final BigInteger IPV6_TEST_NUM = new BigInteger("338984292706304756556241983349463187651");
+    private static final String IPV6_TEST_STR_SHORT = "ff06::c3";
 
     @Test
     void ipV4ToLong() {
@@ -73,94 +78,15 @@ class IpMacUtilsTest {
         assertEquals(-256, IpMacUtils.compareIpV4("192.168.3.0", "192.168.2.0"));
     }
 
-
     @Test
-    void macToLong() {
+    void ipV6toBigInteger() {
+        assertEquals(IPV6_TEST_NUM, IpMacUtils.ipV6toBigInteger(IPV6_TEST_STR));
+        assertEquals(IPV6_TEST_NUM, IpMacUtils.ipV6toBigInteger(IPV6_TEST_STR_SHORT));
     }
 
     @Test
-    void longToMac() {
+    void bigIntegerToIpV6() {
+        assertEquals(IPV6_TEST_STR_SHORT, IpMacUtils.bigIntegerToIpV6(IPV6_TEST_NUM));
     }
 
-    @Test
-    void isLegalMac() {
-    }
-
-    @Test
-    void isLegalMacWithMask() {
-    }
-
-    @Test
-    void isLegalMac3() {
-    }
-
-    @Test
-    void isLegalMac3WithMask() {
-    }
-
-    @Test
-    void formatMac() {
-    }
-
-    @Test
-    void normalizeMac() {
-    }
-
-    @Test
-    void isLegalMask() {
-    }
-
-    @Test
-    void isSameIpType() {
-    }
-
-
-    @Test
-    void compareIpV6() {
-    }
-
-    @Test
-    void compareIp() {
-    }
-
-    @Test
-    void isLegalIpV6() {
-    }
-
-    @Test
-    void isLegalIpV6Common() {
-    }
-
-    @Test
-    void isLegalIpV6All() {
-    }
-
-    @Test
-    void isLegalIPV6Compatible() {
-    }
-
-    @Test
-    void isLegalIPV6Prefix() {
-    }
-
-    @Test
-    void convertIntToIpV4Mask() {
-    }
-
-    @Test
-    void convertIpV4MaskToInt() {
-    }
-
-    @Test
-    void convertIntToV6Mask() {
-    }
-
-
-    @Test
-    void getSubnetAddressForIpV4() {
-    }
-
-    @Test
-    void getIpMaskBits() {
-    }
 }

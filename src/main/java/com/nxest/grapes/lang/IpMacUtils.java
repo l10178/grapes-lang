@@ -169,35 +169,6 @@ public class IpMacUtils {
         return str.toString().replaceFirst("(^|:)(0+(:|$)){2,8}", "::");
     }
 
-//    /**
-//     * convert string IpV6 to double
-//     *
-//     * @param strIpv6 string IpV6
-//     * @return the double value,if ip is invalid, will return 0.0D
-//     */
-//    public static double ipV6ToDouble(String strIpv6) {
-//        try {
-//            String ue = Inet6Address.getByName(strIpv6).getHostAddress();
-//            List<String> ipSections = new ArrayList<>();
-//            String[] fullIpv6 = ue.split(COLON);
-//            for (String ipSub : fullIpv6) {
-//                ipSections.add(ipSub.length() < 4 ? repeat('0', 4 - ipSub.length()) + ipSub : ipSub);
-//            }
-//
-//            String ipJoin = join(ipSections);
-//            double result = 0.0D;
-//
-//            for (int i = 0; i < ipJoin.length(); ++i) {
-//                String s = ipJoin.substring(i, i + 1);
-//                if (Integer.valueOf(s, 16) != 0) {
-//                    result += Math.pow(16.0D, (double) (ipJoin.length() - 1 - i)) * (double) Integer.valueOf(s, 16);
-//                }
-//            }
-//            return result;
-//        } catch (UnknownHostException e) {
-//            throw new NumberFormatException(strIpv6 + " is not a IPv6 address.");
-//        }
-//    }
 
     /**
      * convert string mac to long
@@ -571,20 +542,6 @@ public class IpMacUtils {
     }
 
 
-    public static String[] ipAddressParseUtil(String ipAddress) {
-        String[] result = new String[2];
-        if (ipAddress.contains("*")) {
-            result[0] = ipAddress.replace("*", "0");
-            result[1] = ipAddress.replace("*", "255");
-        } else {
-            result[0] = ipAddress;
-            result[1] = ipAddress;
-        }
-
-        return result;
-    }
-
-
     public static String convertIntToIpV4Mask(int length) {
         if (length >= 32) {
             return "255.255.255.255";
@@ -657,11 +614,11 @@ public class IpMacUtils {
         return Integer.toHexString(result);
     }
 
-    public static int getClassOfIpAdress(String ip) {
-        if (!isLegalIpV4(ip)) {
-            throw new IllegalArgumentException("Illegal arguments : " + ip);
+    public static int getClassOfIpAdress(String ipv4) {
+        if (!isLegalIpV4(ipv4)) {
+            throw new IllegalArgumentException("Illegal arguments : " + ipv4);
         }
-        String[] ipSegs = ip.split(DOT);
+        String[] ipSegs = ipv4.split(DOT);
         String ipSeg = ipSegs[0];
         int ipSegDigit = Integer.parseInt(ipSeg);
         StringBuilder binStr = new StringBuilder(Integer.toBinaryString(ipSegDigit));
@@ -693,7 +650,7 @@ public class IpMacUtils {
                 return IP_CLASS_E;
             }
         }
-        return 0;
+        throw new IllegalArgumentException("Illegal arguments : " + ipv4);
     }
 
     public static String getSubnetAddressForIpV4(String ip, String v4Mask) {

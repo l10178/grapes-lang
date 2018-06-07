@@ -132,11 +132,6 @@ class IpMacUtilsTest {
     void getAllIpByHost() {
     }
 
-
-    @Test
-    void ipAddressParseUtil() {
-    }
-
     @Test
     void convertIntToIpV4Mask() {
     }

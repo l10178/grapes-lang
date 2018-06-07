@@ -14,12 +14,7 @@ public class IpMacUtils {
 
     private static final String IPV4_REGEX = "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\x2e){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
     private static final Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
-    private static final Pattern MAC3 = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
-    private static final Pattern MAC3_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}/([a-fA-F0-9]{1,4}-){2}[a-fA-F0-9]{1,4}");
     private static final Pattern MAC6 = Pattern.compile("([a-fA-F0-9]{1,2}[-:]){5}[a-fA-F0-9]{1,2}");
-    private static final Pattern MAC6COLON = Pattern.compile("(([a-fA-F0-9]{1,2}:){5}[a-fA-F0-9]{1,2})");
-    private static final Pattern MAC6_WITH_MASK = Pattern.compile("([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}/([a-fA-F0-9]{1,2}-){5}[a-fA-F0-9]{1,2}");
-
 
     /**
      * default value 0 for invalid IP
@@ -328,65 +323,6 @@ public class IpMacUtils {
     public static boolean isLegalMac(final String mac) {
         return isNotBlank(mac) && MAC6.matcher(mac.trim()).matches();
     }
-
-
-    public static boolean isLegalMacWithMask(final String mac) {
-        return isNotBlank(mac) && MAC6_WITH_MASK.matcher(mac.trim()).matches();
-    }
-
-
-    public static boolean isLegalMac3(final String mac) {
-        return isNotBlank(mac) && MAC3.matcher(mac.trim()).matches();
-    }
-
-
-    public static boolean isLegalMac3WithMask(final String mac) {
-        return isNotBlank(mac) && MAC3_WITH_MASK.matcher(mac.trim()).matches();
-    }
-
-    public static String formatMac(String mac) {
-        if (isBlank(mac)) {
-            return mac;
-        }
-        mac = mac.replace("-", COLON);
-        String[] macs = mac.split(COLON);
-        List<String> macList = new ArrayList<>();
-
-        for (final String tmp : macs) {
-            int size = tmp.length();
-            if (size > 2) {
-                for (int j = 0; j < size; j += 2) {
-                    if (j + 2 <= size) {
-                        macList.add(tmp.substring(j, j + 2));
-                    } else {
-                        macList.add(tmp.substring(size - 1));
-                    }
-                }
-            } else {
-                macList.add(tmp);
-            }
-        }
-        return join(macList, COLON);
-    }
-
-    public static String normalizeMac(final String mac) {
-        if (isBlank(mac) || !MAC6COLON.matcher(mac.trim()).matches()) {
-            throw new NumberFormatException(mac + " is a invalid MAC address.");
-        }
-        String[] macs = mac.trim().split(COLON);
-        List<String> macList = new ArrayList<>();
-
-        for (final String newMac : macs) {
-            String macStr = newMac.trim();
-            if (macStr.length() == 1) {
-                macStr = "0" + macStr;
-            }
-            macList.add(macStr);
-        }
-        return join(macList, COLON);
-
-    }
-
 
     public static boolean isLegalMask(final String mask) {
         if (isBlank(mask)) {

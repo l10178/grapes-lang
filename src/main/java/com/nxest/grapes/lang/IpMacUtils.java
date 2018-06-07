@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * A collection of InetAddresses utilities.
+ * A collection of IP and MAC utilities.
  *
  * @author l10178
  */

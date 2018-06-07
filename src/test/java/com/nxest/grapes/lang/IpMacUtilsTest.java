@@ -13,11 +13,13 @@ class IpMacUtilsTest {
 
     private static final String IP_TEST_STR = "192.168.0.1";
     private static final long IP_TEST_LONG = 3232235521L;
+
     private static final String IPV6_TEST_STR = "ff06:0:0:0:0:0:0:c3";
     private static final BigInteger IPV6_TEST_NUM = new BigInteger("338984292706304756556241983349463187651");
     private static final String IPV6_TEST_STR_SHORT = "ff06::c3";
-    public static final String MAC_TEST_STR = "60:a0:10:50:d0:30";
-    public static final long MAC_TEST_NUM = 106240584765488L;
+
+    private static final String MAC_TEST_STR = "60:a0:10:50:d0:30";
+    private static final long MAC_TEST_NUM = 106240584765488L;
 
     @Test
     void ipV4ToLong() {

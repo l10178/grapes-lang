@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
+import static com.nxest.grapes.lang.IpMacUtils.IP_INVALID;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -24,7 +25,7 @@ class IpMacUtilsTest {
     @Test
     void ipV4ToLong() {
         assertEquals(IP_TEST_LONG, IpMacUtils.ipV4ToLong(IP_TEST_STR));
-        assertEquals(IpMacUtils.IP_ZERO, IpMacUtils.ipV4ToLong("256.168.0.1"));
+        assertEquals(IP_INVALID, IpMacUtils.ipV4ToLong("256.168.0.1"));
     }
 
     @Test
@@ -86,6 +87,7 @@ class IpMacUtilsTest {
     void ipV6toBigInteger() {
         assertEquals(IPV6_TEST_NUM, IpMacUtils.ipV6toBigInteger(IPV6_TEST_STR));
         assertEquals(IPV6_TEST_NUM, IpMacUtils.ipV6toBigInteger(IPV6_TEST_STR_SHORT));
+        assertEquals(BigInteger.valueOf(IP_INVALID), IpMacUtils.ipV6toBigInteger(""));
     }
 
     @Test

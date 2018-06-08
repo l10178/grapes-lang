@@ -17,9 +17,9 @@ public class IpMacUtils {
     private static final Pattern MAC6 = Pattern.compile("([a-fA-F0-9]{1,2}[-:]){5}[a-fA-F0-9]{1,2}");
 
     /**
-     * default value 0 for invalid IP
+     * default value for invalid IP
      */
-    public static final long IP_ZERO = 0L;
+    public static final long IP_INVALID = -1L;
 
     /**
      * dot <code>.</code> value.
@@ -48,10 +48,10 @@ public class IpMacUtils {
      */
     public static long ipV4ToLong(final String hostIp) {
         if (!isLegalIpV4(hostIp)) {
-            return IP_ZERO;
+            return IP_INVALID;
         }
         String[] parts = hostIp.trim().split(DOT);
-        long ipLong = IP_ZERO;
+        long ipLong = 0L;
         for (final String part : parts) {
             ipLong = ipLong << 8 | Long.valueOf(part);
         }
@@ -169,7 +169,7 @@ public class IpMacUtils {
      */
     public static BigInteger ipV6toBigInteger(final String ipv6) {
         if (!isLegalIpV6(ipv6)) {
-            return BigInteger.ZERO;
+            return BigInteger.valueOf(IP_INVALID);
         }
         return ipV6toBigIntegerSum(ipv6);
     }
@@ -246,11 +246,11 @@ public class IpMacUtils {
      */
     public static long macToLong(final String mac) {
         if (!isLegalMac(mac)) {
-            return IP_ZERO;
+            return IP_INVALID;
         }
         String macAddr = mac.replace("-", "");
         macAddr = macAddr.replace(COLON, "");
-        long longMac = IP_ZERO;
+        long longMac = 0L;
 
         for (int i = 0; i < macAddr.length(); ++i) {
             if (i != 0) {

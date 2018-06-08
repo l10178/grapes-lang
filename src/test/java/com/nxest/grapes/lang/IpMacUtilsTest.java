@@ -94,6 +94,19 @@ class IpMacUtilsTest {
     }
 
     @Test
+    void isLegalIpV6() {
+        assertTrue(IpMacUtils.isLegalIpV6(IPV6_TEST_STR));
+        assertTrue(IpMacUtils.isLegalIpV6(IPV6_TEST_STR_SHORT));
+        assertTrue(IpMacUtils.isLegalIpV6("2001:0000:3238:DFE1:0063:0000:0000:FEFB"));
+        assertTrue(IpMacUtils.isLegalIpV6("2001:0000:3238:DFE1:63:0000:0000:FEFB"));
+        assertTrue(IpMacUtils.isLegalIpV6("2001:0:3238:DFE1:63::FEFB"));
+
+        assertFalse(IpMacUtils.isLegalIpV6(""));
+        assertFalse(IpMacUtils.isLegalIpV6("2001:0:3238:DFE1:63:::FEFB"));
+        assertFalse(IpMacUtils.isLegalIpV6("GFEA:0:3238:DFE1:63::FEFB"));
+    }
+
+    @Test
     void compareIpV6() {
         assertEquals(BigInteger.ZERO, IpMacUtils.compareIpV6(IPV6_TEST_STR, IPV6_TEST_STR_SHORT));
         assertEquals(BigInteger.ONE, IpMacUtils.compareIpV6("ff06::c3", "ff06::c4"));

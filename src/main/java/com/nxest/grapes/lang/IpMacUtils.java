@@ -1,8 +1,8 @@
 package com.nxest.grapes.lang;
 
 import java.math.BigInteger;
-import java.net.*;
-import java.util.*;
+import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.util.regex.Pattern;
 
 /**
@@ -447,116 +447,6 @@ public class IpMacUtils {
         }
     }
 
-    public static String convertIntToIpV4Mask(int length) {
-        if (length >= 32) {
-            return "255.255.255.255";
-        } else if (length <= 0) {
-            return "0.0.0.0";
-        } else {
-            String mask = repeat('1', length) + repeat('0', 32 - length);
-            List<String> list = new ArrayList<>();
-
-            for (int i = 0; i < mask.length(); i += 8) {
-                list.add(convertBinaryToDecimal(mask.substring(i, i + 8)));
-            }
-
-            return join(list, ".");
-        }
-    }
-
-
-    public static int convertIpV4MaskToInt(final String v4Mask) {
-        String[] segs = v4Mask.split(DOT);
-        StringBuilder strV4 = new StringBuilder();
-
-        for (final String seg : segs) {
-            strV4.append(Integer.toBinaryString(Integer.valueOf(seg)));
-        }
-
-        return countMatches(strV4.toString(), "1");
-    }
-
-    public static String convertIntToV6Mask(int length) {
-        if (length >= 128) {
-            return "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff";
-        } else if (length <= 0) {
-            return "0:0:0:0:0:0:0:0";
-        } else {
-            String mask = repeat('1', length) + repeat('0', 128 - length);
-            List<String> list = new ArrayList<>();
-
-            for (int i = 0; i < mask.length(); i += 16) {
-                list.add(convertBinaryToHex(mask.substring(i, i + 16)));
-            }
-
-            return join(list, COLON);
-        }
-    }
-
-    private static String convertBinaryToDecimal(final String binary) {
-        long result = 0L;
-
-        for (int j = 0; j < binary.length(); ++j) {
-            String s = binary.substring(j, j + 1);
-            if (Integer.valueOf(s) != 0) {
-                result = (long) ((double) result + Math.pow(2.0D, (double) (binary.length() - 1 - j)) * (double) Integer.valueOf(s));
-            }
-        }
-
-        return String.valueOf(result);
-    }
-
-    private static String convertBinaryToHex(final String binary) {
-        int result = 0;
-
-        for (int j = 0; j < binary.length(); ++j) {
-            String s = binary.substring(j, j + 1);
-            if (Integer.valueOf(s) != 0) {
-                result = (int) ((double) result + Math.pow(2.0D, (double) (binary.length() - 1 - j)) * (double) Integer.valueOf(s));
-            }
-        }
-
-        return Integer.toHexString(result);
-    }
-
-
-    public static String getSubnetAddressForIpV4(final String ip, String v4Mask) {
-        if (!isLegalIpV4(ip) || !isLegalIpV4(v4Mask)) {
-            throw new IllegalArgumentException("Illegal arguments : " + ip + "," + v4Mask);
-        }
-        StringBuilder subNet = new StringBuilder();
-        String[] ipSegs = ip.split(DOT);
-        String[] maskSegs = v4Mask.split(DOT);
-
-        for (int i = 0; i < ipSegs.length; ++i) {
-            String ipSeg = ipSegs[i];
-            String maskSeg = maskSegs[i];
-            int ipSegDigit = Integer.parseInt(ipSeg);
-            int maskSegDigit = Integer.parseInt(maskSeg);
-            int andResult = ipSegDigit & maskSegDigit;
-            subNet.append(String.valueOf(andResult));
-            if (i != ipSegs.length - 1) {
-                subNet.append(".");
-            }
-        }
-        return subNet.toString();
-    }
-
-    public static int getIpMaskBits(final String mask) {
-        if (!isLegalIpV4(mask)) {
-            return Integer.valueOf(mask);
-        }
-        String[] segs = mask.split(DOT);
-        StringBuilder strV4 = new StringBuilder();
-
-        for (final String seg : segs) {
-            strV4.append(Integer.toBinaryString(Integer.valueOf(seg)));
-        }
-
-        return countMatches(strV4.toString(), "1");
-
-    }
-
     private static boolean isBlank(CharSequence cs) {
         int strLen;
         if (cs != null && (strLen = cs.length()) != 0) {
@@ -593,50 +483,5 @@ public class IpMacUtils {
         return cs.toString().indexOf(searchChar.toString(), start);
     }
 
-    private static String join(Collection collection, String separator) {
-        if (collection == null) {
-            return null;
-        }
-        Iterator iterator = collection.iterator();
-
-        if (!iterator.hasNext()) {
-            return "";
-        }
-        Object first = iterator.next();
-        if (!iterator.hasNext()) {
-            return Objects.toString(first);
-        }
-        StringBuilder builder = new StringBuilder(256);
-        if (first != null) {
-            builder.append(first);
-        }
-
-        while (iterator.hasNext()) {
-            if (separator != null) {
-                builder.append(separator);
-            }
-
-            Object obj = iterator.next();
-            if (obj != null) {
-                builder.append(obj);
-            }
-        }
-
-        return builder.toString();
-    }
-
-
-    private static String repeat(char ch, int repeat) {
-        if (repeat <= 0) {
-            return "";
-        } else {
-            char[] buf = new char[repeat];
-
-            for (int i = repeat - 1; i >= 0; --i) {
-                buf[i] = ch;
-            }
-            return new String(buf);
-        }
-    }
 }
 

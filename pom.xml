@@ -27,7 +27,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>grapes-lang</name>
-    <description>grapes-lang is a network util, to compare ip, MAC and so on.</description>
+    <description>A collection of IP and MAC utilities.</description>
     <licenses>
         <license>
             <name>MIT License</name>

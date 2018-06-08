@@ -101,6 +101,9 @@ class IpMacUtilsTest {
         assertTrue(IpMacUtils.isLegalIpV6("2001:0000:3238:DFE1:63:0000:0000:FEFB"));
         assertTrue(IpMacUtils.isLegalIpV6("2001:0:3238:DFE1:63::FEFB"));
 
+        //yeah ,it not legal IPV6, may be this's a bad idea.
+        assertFalse(IpMacUtils.isLegalIpV6("0:0:0:0:0:ffff:192.1.56.10"));
+
         assertFalse(IpMacUtils.isLegalIpV6(""));
         assertFalse(IpMacUtils.isLegalIpV6("2001:0:3238:DFE1:63:::FEFB"));
         assertFalse(IpMacUtils.isLegalIpV6("GFEA:0:3238:DFE1:63::FEFB"));

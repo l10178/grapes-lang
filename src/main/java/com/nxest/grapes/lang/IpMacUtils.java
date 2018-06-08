@@ -324,60 +324,6 @@ public class IpMacUtils {
         return isNotBlank(mac) && MAC6.matcher(mac.trim()).matches();
     }
 
-    public static boolean isLegalMask(final String mask) {
-        if (isBlank(mask)) {
-            return false;
-        }
-        String[] parts = mask.trim().split(DOT);
-        if (mask.endsWith(".")) {
-            return false;
-        }
-        if (parts.length != 4) {
-            return false;
-        }
-        StringBuilder maskBinary = new StringBuilder();
-        int leng = parts.length;
-
-        for (int i = 0; i < leng; ++i) {
-            String part = parts[i];
-            if (part.length() > 1 && part.startsWith("0")) {
-                return false;
-            }
-
-            try {
-                int nfe = Integer.parseInt(part.trim());
-                if (nfe < 0 || nfe > 255) {
-                    return false;
-                }
-
-                String s = Integer.toBinaryString(nfe);
-
-                for (int j = 0; j < 8 - s.length(); ++j) {
-                    maskBinary.append("0");
-                }
-
-                maskBinary.append(s);
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-
-        int count = 0;
-
-        for (leng = 0; leng < maskBinary.length(); ++leng) {
-            if (maskBinary.charAt(leng) == 49) {
-                if (count >= 1) {
-                    return false;
-                }
-            } else {
-                ++count;
-            }
-        }
-
-        return true;
-    }
-
-
     public static boolean isSameIpType(final String me, String he) {
         boolean meIsV4 = isLegalIpV4(me);
         boolean meIsV6 = isLegalIpV6(me);
@@ -427,7 +373,8 @@ public class IpMacUtils {
     public static boolean isLegalIPV6Prefix(final String ip) {
         if (isBlank(ip)) {
             return false;
-        } else if (countMatches(ip, SLASH) == 1 && !ip.endsWith(SLASH)) {
+        }
+        if (countMatches(ip, SLASH) == 1 && !ip.endsWith(SLASH)) {
             String[] ips = ip.split(SLASH);
 
             int prefixLength1;
@@ -442,9 +389,8 @@ public class IpMacUtils {
             }
 
             return isLegalIpV6Common(ips[0]) && prefixLength1 >= 0 && prefixLength1 <= 128;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private static boolean isBlank(CharSequence cs) {

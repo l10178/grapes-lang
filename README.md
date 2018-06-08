@@ -1,5 +1,5 @@
 # grapes-lang
-A collection of ip,mac utilities.
+A collection of IP and MAC utilities.
 
 
 ## License

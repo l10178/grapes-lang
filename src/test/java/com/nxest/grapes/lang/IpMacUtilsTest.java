@@ -141,4 +141,16 @@ class IpMacUtilsTest {
         assertFalse(IpMacUtils.isLegalMac("GG:a0:10:50:d0:30"));
     }
 
+    @Test
+    void rangeBetweenIpV4() {
+        assertEquals(1, IpMacUtils.rangeBetweenIpV4("192.168.0.1", "192.168.0.2"));
+        assertEquals(256, IpMacUtils.rangeBetweenIpV4("192.168.0.1", "192.168.1.1"));
+    }
+
+    @Test
+    void rangeBetweenIpV6() {
+        assertEquals(BigInteger.ONE, IpMacUtils.rangeBetweenIpV6("ff06::c3", "ff06::c4"));
+        assertEquals(BigInteger.valueOf(65536), IpMacUtils.rangeBetweenIpV6("ff06::c3", "ff06:0:0:0:0:0:1:c3"));
+        assertEquals(BigInteger.valueOf(-65536), IpMacUtils.rangeBetweenIpV6("ff06:0:0:0:0:0:1:c3", "ff06::c3"));
+    }
 }

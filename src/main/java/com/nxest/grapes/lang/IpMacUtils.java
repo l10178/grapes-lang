@@ -160,6 +160,27 @@ public class IpMacUtils {
         return ipV4ToLong(ip2) - ipV4ToLong(ip1);
     }
 
+    /**
+     * The range between two V4 IPs.
+     *
+     * @param startIp the start IP
+     * @param endIp   the end IP
+     * @return endIp - startIp
+     */
+    public static long rangeBetweenIpV4(final String startIp, final String endIp) {
+        return ipV4ToLong(endIp) - ipV4ToLong(startIp);
+    }
+
+    /**
+     * The range between two V6 IPs.
+     *
+     * @param startIp the start IP
+     * @param endIp   the end IP
+     * @return endIp - startIp
+     */
+    public static BigInteger rangeBetweenIpV6(final String startIp, final String endIp) {
+        return ipV6toBigInteger(endIp).subtract(ipV6toBigInteger(startIp));
+    }
 
     /**
      * convert String IPV6 to BigInteger

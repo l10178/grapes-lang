@@ -1,4 +1,4 @@
-# grapes-lang
+# grapes-lang [![Build Status](https://travis-ci.org/l10178/grapes-lang.svg?branch=master)](https://travis-ci.org/l10178/grapes-lang)
 
 A collection of IP and MAC utilities.
 

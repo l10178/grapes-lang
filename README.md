@@ -1,6 +1,8 @@
 grapes-lang
 ----------
  [![Build Status](https://travis-ci.org/l10178/grapes-lang.svg?branch=master)](https://travis-ci.org/l10178/grapes-lang)
+ [![Maven Central]( https://maven-badges.herokuapp.com/maven-central/com.nxest.grapes/grapes-lang/badge.svg)]( https://maven-badges.herokuapp.com/maven-central/com.nxest.grapes/grapes-lang/)
+ [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
 A collection of IP and MAC utilities. For example, convert an IP string address to an unique long value and viceversa.
 

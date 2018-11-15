@@ -155,12 +155,12 @@ public class IpMacUtils {
     /**
      * compare IPV4
      *
-     * @param ip1 ip1
-     * @param ip2 ip2
-     * @return ip2 long value - ip1 long value
+     * @param leftIp ip1
+     * @param rightIp ip2
+     * @return leftIp long value - rightIp long value
      */
-    public static long compareIpV4(final String ip1, String ip2) {
-        return ipV4ToLong(ip1) - ipV4ToLong(ip2);
+    public static long compareIpV4(final String leftIp, String rightIp) {
+        return ipV4ToLong(leftIp) - ipV4ToLong(rightIp);
     }
 
     /**
@@ -249,12 +249,12 @@ public class IpMacUtils {
     /**
      * compare two IPV6
      *
-     * @param ip1 ip1
-     * @param ip2 ip2
-     * @return ip2 - ip1
+     * @param leftIp ip1
+     * @param rightIp ip2
+     * @return leftIp - rightIp
      */
-    public static BigInteger compareIpV6(final String ip1, final String ip2) {
-        return ipV6toBigInteger(ip1).subtract(ipV6toBigInteger(ip2));
+    public static BigInteger compareIpV6(final String leftIp, final String rightIp) {
+        return ipV6toBigInteger(leftIp).subtract(ipV6toBigInteger(rightIp));
     }
 
     /**
@@ -359,13 +359,13 @@ public class IpMacUtils {
         return isAllIpv4 || isAllIpv6;
     }
 
-    public static long compareIp(final String ip1, String ip2) {
-        if (isLegalIpV4(ip1) && isLegalIpV4(ip2)) {
-            return compareIpV4(ip1, ip2);
-        } else if (isLegalIpV6(ip1) && isLegalIpV6(ip2)) {
-            return compareIpV6(ip1, ip2).longValue();
+    public static long compareIp(final String leftIp, String rightIp) {
+        if (isLegalIpV4(leftIp) && isLegalIpV4(rightIp)) {
+            return compareIpV4(leftIp, rightIp);
+        } else if (isLegalIpV6(leftIp) && isLegalIpV6(rightIp)) {
+            return compareIpV6(leftIp, rightIp).longValue();
         } else {
-            throw new NumberFormatException(ip1 + " and " + ip2 + " are not same IP type.");
+            throw new NumberFormatException(leftIp + " and " + rightIp + " are not same IP type.");
         }
     }
 

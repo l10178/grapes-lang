@@ -3,6 +3,7 @@ package com.nxest.grapes.lang;
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -155,7 +156,7 @@ public class IpMacUtils {
     /**
      * compare IPV4
      *
-     * @param leftIp ip1
+     * @param leftIp  ip1
      * @param rightIp ip2
      * @return leftIp long value - rightIp long value
      */
@@ -249,7 +250,7 @@ public class IpMacUtils {
     /**
      * compare two IPV6
      *
-     * @param leftIp ip1
+     * @param leftIp  ip1
      * @param rightIp ip2
      * @return leftIp - rightIp
      */
@@ -429,10 +430,18 @@ public class IpMacUtils {
      * @return true if ip in range
      */
     public static boolean ipExistsInRange(String ip, String ipSection) {
+        return ipExistsInRangeBySplit(ip, ipSection, MIDLINE);
+    }
+
+    public static boolean ipExistsInRangeBySplit(String ip, String ipSection, String split) {
         if (isBlank(ip) || isBlank(ipSection)) {
             return false;
         }
-        String[] ipArray = ipSection.split(MIDLINE);
+        //split may be space, may be a pattern, but can not be null
+        if(Objects.isNull(split)){
+            return false;
+        }
+        String[] ipArray = ipSection.split(split);
         String beginIp = ipArray[0].trim();
         String endIp = ipArray[0].trim();
         if (ipArray.length > 1) {

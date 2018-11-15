@@ -76,11 +76,11 @@ class IpMacUtilsTest {
         assertEquals(0, IpMacUtils.compareIpV4("0.0.0.0", "0.0.0.0"));
         assertEquals(0, IpMacUtils.compareIpV4("255.255.255.255", "255.255.255.255"));
         assertEquals(0, IpMacUtils.compareIpV4("192.168.0.1", "192.168.0.1"));
-        assertEquals(1, IpMacUtils.compareIpV4("192.168.0.1", "192.168.0.2"));
-        assertEquals(256, IpMacUtils.compareIpV4("192.168.1.0", "192.168.2.0"));
-        assertEquals(65536, IpMacUtils.compareIpV4("192.168.1.1", "192.169.1.1"));
-        assertEquals(16842752, IpMacUtils.compareIpV4("192.168.1.1", "193.169.1.1"));
-        assertEquals(-256, IpMacUtils.compareIpV4("192.168.3.0", "192.168.2.0"));
+        assertEquals(-1, IpMacUtils.compareIpV4("192.168.0.1", "192.168.0.2"));
+        assertEquals(-256, IpMacUtils.compareIpV4("192.168.1.0", "192.168.2.0"));
+        assertEquals(-65536, IpMacUtils.compareIpV4("192.168.1.1", "192.169.1.1"));
+        assertEquals(-16842752, IpMacUtils.compareIpV4("192.168.1.1", "193.169.1.1"));
+        assertEquals(256, IpMacUtils.compareIpV4("192.168.3.0", "192.168.2.0"));
     }
 
     @Test
@@ -103,7 +103,7 @@ class IpMacUtilsTest {
         assertTrue(IpMacUtils.isLegalIpV6("2001:0000:3238:DFE1:63:0000:0000:FEFB"));
         assertTrue(IpMacUtils.isLegalIpV6("2001:0:3238:DFE1:63::FEFB"));
 
-        //yeah ,it not legal IPV6, may be this's a bad idea.
+        // yeah ,it not legal IPV6, may be this's a bad idea.
         assertFalse(IpMacUtils.isLegalIpV6("0:0:0:0:0:ffff:192.1.56.10"));
 
         assertFalse(IpMacUtils.isLegalIpV6(""));
@@ -114,8 +114,8 @@ class IpMacUtilsTest {
     @Test
     void compareIpV6() {
         assertEquals(BigInteger.ZERO, IpMacUtils.compareIpV6(IPV6_TEST_STR, IPV6_TEST_STR_SHORT));
-        assertEquals(BigInteger.ONE, IpMacUtils.compareIpV6("ff06::c3", "ff06::c4"));
-        assertEquals(BigInteger.valueOf(65536), IpMacUtils.compareIpV6("ff06::c3", "ff06:0:0:0:0:0:1:c3"));
+        assertEquals(BigInteger.ONE, IpMacUtils.compareIpV6("ff06::c4", "ff06::c3"));
+        assertEquals(BigInteger.valueOf(65536), IpMacUtils.compareIpV6("ff06:0:0:0:0:0:1:c3", "ff06::c3"));
     }
 
     @Test
@@ -152,5 +152,26 @@ class IpMacUtilsTest {
         assertEquals(BigInteger.ONE, IpMacUtils.rangeBetweenIpV6("ff06::c3", "ff06::c4"));
         assertEquals(BigInteger.valueOf(65536), IpMacUtils.rangeBetweenIpV6("ff06::c3", "ff06:0:0:0:0:0:1:c3"));
         assertEquals(BigInteger.valueOf(-65536), IpMacUtils.rangeBetweenIpV6("ff06:0:0:0:0:0:1:c3", "ff06::c3"));
+    }
+
+    @Test
+    void ipExistsInRange() {
+        assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", null));
+        assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", "192.168.1.5"));
+        assertTrue(IpMacUtils.ipExistsInRange("192.168.1.5", "192.168.1.2", "192.168.1.5"));
+        assertTrue(IpMacUtils.ipExistsInRange("ff06:0:0:0:0:1:0:c3", "ff06::c3", "ff06:0:0:0:0:2:0:c3"));
+        assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "192.168.1.5"));
+        assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", null, null));
+        assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "ff06::c3"));
+
+    }
+
+    @Test
+    void ipExistsInRangeSection() {
+        assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2"));
+        assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2- 192.168.1.5"));
+        assertTrue(IpMacUtils.ipExistsInRange("192.168.1.5", "192.168.1.2 - 192.168.1.5 "));
+        assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", null));
+        assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3-ff06::c3"));
     }
 }

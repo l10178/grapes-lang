@@ -32,13 +32,14 @@ public class IpMacUtils {
 
     private static final String SLASH = "/";
 
+    private static final String MIDLINE = "-";
 
     private IpMacUtils() {
     }
 
-
     /**
      * convert string IPV4 to long.
+     * 
      * <pre>
      *     192.168.0.1 to 3232235521L
      * </pre>
@@ -60,6 +61,7 @@ public class IpMacUtils {
 
     /**
      * convert long IPV4 to string.
+     * 
      * <pre>
      *     3232235521L to 192.168.0.1
      * </pre>
@@ -74,9 +76,9 @@ public class IpMacUtils {
         return (longIp >> 24 & 255L) + "." + (longIp >> 16 & 255L) + "." + (longIp >> 8 & 255L) + "." + (longIp & 255L);
     }
 
-
     /**
      * Checks if legal IPV4.
+     * 
      * <pre>
      * assertTrue(IpMacUtils.isLegalIpV4("192.168.0.1"));
      * assertFalse(IpMacUtils.isLegalIpV4(null));
@@ -98,6 +100,7 @@ public class IpMacUtils {
 
     /**
      * Get IPV4 class type, A B C D E
+     * 
      * <pre>
      *     "A", "0.0.0.0-127.255.255.255"
      *     "B", "128.0.0.0–191.255.255.255"
@@ -157,7 +160,7 @@ public class IpMacUtils {
      * @return ip2 long value - ip1 long value
      */
     public static long compareIpV4(final String ip1, String ip2) {
-        return ipV4ToLong(ip2) - ipV4ToLong(ip1);
+        return ipV4ToLong(ip1) - ipV4ToLong(ip2);
     }
 
     /**
@@ -214,12 +217,11 @@ public class IpMacUtils {
         String[] str = ipv6.split(COLON);
         BigInteger big = BigInteger.ZERO;
         for (int i = 0; i < str.length; i++) {
-            //::1
+            // ::1
             if (str[i].isEmpty()) {
                 str[i] = "0";
             }
-            big = big.add(BigInteger.valueOf(Long.valueOf(str[i], 16))
-                .shiftLeft(16 * (str.length - i - 1)));
+            big = big.add(BigInteger.valueOf(Long.valueOf(str[i], 16)).shiftLeft(16 * (str.length - i - 1)));
         }
         return big;
     }
@@ -238,7 +240,7 @@ public class IpMacUtils {
 
             big = big.shiftRight(16);
         }
-        //the last :
+        // the last :
         str = new StringBuilder(str.substring(0, str.length() - 1));
 
         return str.toString().replaceFirst("(^|:)(0+(:|$)){2,8}", "::");
@@ -252,12 +254,12 @@ public class IpMacUtils {
      * @return ip2 - ip1
      */
     public static BigInteger compareIpV6(final String ip1, final String ip2) {
-        return ipV6toBigInteger(ip2).subtract(ipV6toBigInteger(ip1));
+        return ipV6toBigInteger(ip1).subtract(ipV6toBigInteger(ip2));
     }
-
 
     /**
      * convert string mac to long
+     * 
      * <pre>
      *      60-a0-10-50-d0-30 to 106240584765488L
      * </pre>
@@ -269,7 +271,7 @@ public class IpMacUtils {
         if (!isLegalMac(mac)) {
             return IP_INVALID;
         }
-        String macAddr = mac.replace("-", "");
+        String macAddr = mac.replace(MIDLINE, "");
         macAddr = macAddr.replace(COLON, "");
         long longMac = 0L;
 
@@ -292,6 +294,7 @@ public class IpMacUtils {
 
     /**
      * convert long mac to string
+     * 
      * <pre>
      *     106240584765488L to 60-a0-10-50-d0-30
      * </pre>
@@ -320,7 +323,7 @@ public class IpMacUtils {
         for (int i = 0; i < strArray.length; ++i) {
             mac.append(strArray[i]);
             if (i != strArray.length - 1 && (i + 1) % 2 == 0) {
-                mac.append("-");
+                mac.append(MIDLINE);
             }
         }
 
@@ -329,13 +332,14 @@ public class IpMacUtils {
 
     /**
      * Checks if legal MAC
+     * 
      * <pre>
-     *      assertTrue(IpMacUtils.isLegalMac("60:a0:10:50:d0:30"));
-     *      assertTrue(IpMacUtils.isLegalMac("60:A0:10:50:D0:30"));
-     *      assertTrue(IpMacUtils.isLegalMac(60-a0-10-50-d0-30));
-     *      assertFalse(IpMacUtils.isLegalMac(""));
-     *      assertFalse(IpMacUtils.isLegalMac("12:34::"));
-     *      assertFalse(IpMacUtils.isLegalMac("GG:a0:10:50:d0:30"));
+     * assertTrue(IpMacUtils.isLegalMac("60:a0:10:50:d0:30"));
+     * assertTrue(IpMacUtils.isLegalMac("60:A0:10:50:D0:30"));
+     * assertTrue(IpMacUtils.isLegalMac(60 - a0 - 10 - 50 - d0 - 30));
+     * assertFalse(IpMacUtils.isLegalMac(""));
+     * assertFalse(IpMacUtils.isLegalMac("12:34::"));
+     * assertFalse(IpMacUtils.isLegalMac("GG:a0:10:50:d0:30"));
      * </pre>
      *
      * @param mac the mac to check
@@ -355,7 +359,6 @@ public class IpMacUtils {
         return isAllIpv4 || isAllIpv6;
     }
 
-
     public static long compareIp(final String ip1, String ip2) {
         if (isLegalIpV4(ip1) && isLegalIpV4(ip2)) {
             return compareIpV4(ip1, ip2);
@@ -370,7 +373,6 @@ public class IpMacUtils {
         return isLegalIpV6Common(ipv6) || isLegalIPV6Compatible(ipv6);
     }
 
-
     public static boolean isLegalIpV6Common(final String ip) {
         try {
             InetAddress e = Inet6Address.getByName(ip);
@@ -380,16 +382,13 @@ public class IpMacUtils {
         }
     }
 
-
     public static boolean isLegalIpV6All(final String ip) {
         return isLegalIpV6Common(ip) || isLegalIPV6Compatible(ip) || isLegalIPV6Prefix(ip);
     }
 
-
     public static boolean isLegalIPV6Compatible(final String ip) {
         return isLegalIpV6Common(ip) && (!isBlank(ip) && countMatches(ip, ".") == 3);
     }
-
 
     public static boolean isLegalIPV6Prefix(final String ip) {
         if (isBlank(ip)) {
@@ -412,6 +411,65 @@ public class IpMacUtils {
             return isLegalIpV6Common(ips[0]) && prefixLength1 >= 0 && prefixLength1 <= 128;
         }
         return false;
+    }
+
+    /**
+     * check the ip in range.
+     * 
+     * <pre>
+     * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2"));
+     * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2- 192.168.1.5"));
+     * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.5", "192.168.1.2 - 192.168.1.5 "));
+     * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", null));
+     * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3-ff06::c3"));
+     * </pre>
+     * 
+     * @param ip        the ip to compare, can not be null
+     * @param ipSection ip section split by '-', eg. 192.168.1.2-192.168.3.0
+     * @return true if ip in range
+     */
+    public static boolean ipExistsInRange(String ip, String ipSection) {
+        if (isBlank(ip) || isBlank(ipSection)) {
+            return false;
+        }
+        String[] ipArray = ipSection.split(MIDLINE);
+        String beginIp = ipArray[0].trim();
+        String endIp = ipArray[0].trim();
+        if (ipArray.length > 1) {
+            endIp = ipArray[1].trim();
+        }
+        return ipExistsInRange(ip, beginIp, endIp);
+    }
+
+    /**
+     * check the ip in range.
+     * 
+     * <pre>
+     * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", null));
+     * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", "192.168.1.5"));
+     * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.5", "192.168.1.2", "192.168.1.5"));
+     * assertTrue(IpMacUtils.ipExistsInRange("ff06:0:0:0:0:1:0:c3", "ff06::c3", "ff06:0:0:0:0:2:0:c3"));
+     * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "192.168.1.5"));
+     * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", null, null));
+     * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "ff06::c3"));
+     * </pre>
+     * 
+     * @param ip      the ip to compare, can not be null
+     * @param beginIp begin ip, can not be null
+     * @param endIp   end ip, can be null
+     * @return true if ip in range
+     */
+    public static boolean ipExistsInRange(String ip, String beginIp, String endIp) {
+        if (isBlank(ip) || (isBlank(beginIp) && isBlank(endIp))) {
+            return false;
+        }
+        if (isBlank(beginIp)) {
+            beginIp = endIp;
+        }
+        if (isBlank(endIp)) {
+            endIp = beginIp;
+        }
+        return compareIp(ip, beginIp) >= 0 && compareIp(ip, endIp) <= 0;
     }
 
     private static boolean isBlank(CharSequence cs) {
@@ -451,4 +509,3 @@ public class IpMacUtils {
     }
 
 }
-

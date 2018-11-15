@@ -15,7 +15,7 @@ Download the [JARs](https://search.maven.org/search?q=a:grapes-lang). Or for Mav
 <dependency>
   <groupId>com.nxest.grapes</groupId>
   <artifactId>grapes-lang</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 

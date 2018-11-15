@@ -101,7 +101,7 @@ public class IpMacUtils {
 
     /**
      * Get IPV4 class type, A B C D E
-     * 
+     *
      * <pre>
      *     "A", "0.0.0.0-127.255.255.255"
      *     "B", "128.0.0.0–191.255.255.255"
@@ -437,8 +437,8 @@ public class IpMacUtils {
         if (isBlank(ip) || isBlank(ipSection)) {
             return false;
         }
-        //split may be space, may be a pattern, but can not be null
-        if(Objects.isNull(split)){
+        // split may be space, may be a pattern, but can not be null
+        if (Objects.isNull(split)) {
             return false;
         }
         String[] ipArray = ipSection.split(split);

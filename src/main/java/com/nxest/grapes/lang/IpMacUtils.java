@@ -3,6 +3,7 @@ package com.nxest.grapes.lang;
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -280,7 +281,6 @@ public class IpMacUtils {
             if (i != 0) {
                 longMac <<= 4;
             }
-
             if (macAddr.charAt(i) >= 48 && macAddr.charAt(i) <= 57) {
                 longMac += (long) (macAddr.charAt(i) - 48);
             } else if (macAddr.charAt(i) >= 97 && macAddr.charAt(i) <= 102) {
@@ -289,7 +289,6 @@ public class IpMacUtils {
                 longMac += (long) (macAddr.charAt(i) - 65 + 10);
             }
         }
-
         return longMac;
     }
 
@@ -348,6 +347,10 @@ public class IpMacUtils {
      */
     public static boolean isLegalMac(final String mac) {
         return isNotBlank(mac) && MAC6.matcher(mac.trim()).matches();
+    }
+
+    public static boolean isNotLegalMac(final String mac) {
+        return !isLegalMac(mac);
     }
 
     public static boolean isSameIpType(final String me, String he) {
@@ -479,6 +482,38 @@ public class IpMacUtils {
             endIp = beginIp;
         }
         return compareIp(ip, beginIp) >= 0 && compareIp(ip, endIp) <= 0;
+    }
+
+    public static boolean macExistsInRange(String mac, String beginMac, String endMac) {
+        if (isBlank(mac) || (isBlank(beginMac) && isBlank(endMac))) {
+            return false;
+        }
+        if (isBlank(beginMac)) {
+            beginMac = endMac;
+        }
+        if (isBlank(endMac)) {
+            endMac = beginMac;
+        }
+        if (isNotLegalMac(mac) || isNotLegalMac(beginMac) || isNotLegalMac(beginMac)) {
+            return false;
+        }
+        long macLong = macToLong(mac);
+        long beginMacLong = macToLong(beginMac);
+        long endMacLong = macToLong(endMac);
+        return macLong >= beginMacLong && macLong <= endMacLong;
+    }
+
+    public static boolean macExistsInArray(String mac, String... macs) {
+        if (isNotLegalMac(mac) || Objects.isNull(macs) || macs.length == 0) {
+            return false;
+        }
+        long macLong = macToLong(mac);
+        for (String mac2 : macs) {
+            if (macLong == macToLong(mac2)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isBlank(CharSequence cs) {

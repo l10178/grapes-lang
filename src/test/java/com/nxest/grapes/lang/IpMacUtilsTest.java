@@ -156,14 +156,13 @@ class IpMacUtilsTest {
 
     @Test
     void ipExistsInRange() {
-        assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", null));
         assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", "192.168.1.5"));
         assertTrue(IpMacUtils.ipExistsInRange("192.168.1.5", "192.168.1.2", "192.168.1.5"));
         assertTrue(IpMacUtils.ipExistsInRange("ff06:0:0:0:0:1:0:c3", "ff06::c3", "ff06:0:0:0:0:2:0:c3"));
+        assertFalse(IpMacUtils.ipExistsInRange("", null, null));
+        assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", null));
         assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "192.168.1.5"));
-        assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", null, null));
         assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "ff06::c3"));
-
     }
 
     @Test

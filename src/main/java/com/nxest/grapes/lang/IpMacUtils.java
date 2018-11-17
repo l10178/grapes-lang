@@ -456,29 +456,23 @@ public class IpMacUtils {
      * check the ip in range.
      * 
      * <pre>
-     * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", null));
      * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", "192.168.1.5"));
      * assertTrue(IpMacUtils.ipExistsInRange("192.168.1.5", "192.168.1.2", "192.168.1.5"));
      * assertTrue(IpMacUtils.ipExistsInRange("ff06:0:0:0:0:1:0:c3", "ff06::c3", "ff06:0:0:0:0:2:0:c3"));
+     * assertFalse(IpMacUtils.ipExistsInRange("", null, null));
+     * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.2", null));
      * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "192.168.1.5"));
-     * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", null, null));
      * assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3", "ff06::c3"));
      * </pre>
      * 
      * @param ip      the ip to compare, can not be null
      * @param beginIp begin ip, can not be null
-     * @param endIp   end ip, can be null
+     * @param endIp   end ip, can not be null
      * @return true if ip in range
      */
     public static boolean ipExistsInRange(String ip, String beginIp, String endIp) {
-        if (isBlank(ip) || (isBlank(beginIp) && isBlank(endIp))) {
+        if (isBlank(ip) || isBlank(beginIp) || isBlank(endIp)) {
             return false;
-        }
-        if (isBlank(beginIp)) {
-            beginIp = endIp;
-        }
-        if (isBlank(endIp)) {
-            endIp = beginIp;
         }
         return compareIp(ip, beginIp) >= 0 && compareIp(ip, endIp) <= 0;
     }

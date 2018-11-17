@@ -5,7 +5,7 @@
 
     <groupId>com.nxest.grapes</groupId>
     <artifactId>grapes-lang</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <packaging>jar</packaging>
     <name>grapes-lang</name>
     <description>A collection of IP and MAC utilities.</description>

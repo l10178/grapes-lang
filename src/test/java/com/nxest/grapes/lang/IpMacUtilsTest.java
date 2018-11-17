@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static com.nxest.grapes.lang.IpMacUtils.IP_INVALID;
+import static com.nxest.grapes.lang.IpMacUtils.INVALID_VALUE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -25,7 +25,7 @@ class IpMacUtilsTest {
     @Test
     void ipV4ToLong() {
         assertEquals(IP_TEST_LONG, IpMacUtils.ipV4ToLong(IP_TEST_STR));
-        assertEquals(IP_INVALID, IpMacUtils.ipV4ToLong("256.168.0.1"));
+        assertEquals(INVALID_VALUE, IpMacUtils.ipV4ToLong("256.168.0.1"));
     }
 
     @Test
@@ -87,7 +87,7 @@ class IpMacUtilsTest {
     void ipV6toBigInteger() {
         assertEquals(IPV6_TEST_NUM, IpMacUtils.ipV6toBigInteger(IPV6_TEST_STR));
         assertEquals(IPV6_TEST_NUM, IpMacUtils.ipV6toBigInteger(IPV6_TEST_STR_SHORT));
-        assertEquals(BigInteger.valueOf(IP_INVALID), IpMacUtils.ipV6toBigInteger(""));
+        assertEquals(BigInteger.valueOf(INVALID_VALUE), IpMacUtils.ipV6toBigInteger(""));
     }
 
     @Test
@@ -173,5 +173,17 @@ class IpMacUtilsTest {
         assertTrue(IpMacUtils.ipExistsInRange("192.168.1.5", "192.168.1.2 - 192.168.1.5 "));
         assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", null));
         assertFalse(IpMacUtils.ipExistsInRange("192.168.1.2", "192.168.1.3-ff06::c3"));
+    }
+
+    @Test
+    void macExistsInArray() {
+        assertTrue(IpMacUtils.macExistsInArray("60:a0:10:50:d0:30", "60:a0:10:50:d0:30", "50:a0:10:50:d0:30"));
+        assertTrue(IpMacUtils.macExistsInArray("60:a0:10:50:d0:30", "60-A0-10-50-D0-30"));
+        assertFalse(IpMacUtils.macExistsInArray("60:a0:10:50:d0:30", ""));
+    }
+    @Test
+    void macExistsInRange() {
+        assertTrue(IpMacUtils.macExistsInRange("60:a0:10:50:d0:30", "60:a0:10:50:d0:30", "70-A0-10-50-D0-30"));
+        assertTrue(IpMacUtils.macExistsInRange("60:a0:10:50:d0:30", "50:a0:10:50:d0:30", "70-A0-10-50-D0-30"));
     }
 }

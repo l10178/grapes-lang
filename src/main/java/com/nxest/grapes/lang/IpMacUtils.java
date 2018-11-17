@@ -3,7 +3,6 @@ package com.nxest.grapes.lang;
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -19,9 +18,9 @@ public class IpMacUtils {
     private static final Pattern MAC6 = Pattern.compile("([a-fA-F0-9]{1,2}[-:]){5}[a-fA-F0-9]{1,2}");
 
     /**
-     * default value for invalid IP
+     * value for invalid IP or MAC
      */
-    public static final long IP_INVALID = -1L;
+    public static final long INVALID_VALUE = -1L;
 
     /**
      * dot <code>.</code> value.
@@ -51,7 +50,7 @@ public class IpMacUtils {
      */
     public static long ipV4ToLong(final String hostIp) {
         if (!isLegalIpV4(hostIp)) {
-            return IP_INVALID;
+            return INVALID_VALUE;
         }
         String[] parts = hostIp.trim().split(DOT);
         long ipLong = 0L;
@@ -195,7 +194,7 @@ public class IpMacUtils {
      */
     public static BigInteger ipV6toBigInteger(final String ipv6) {
         if (!isLegalIpV6(ipv6)) {
-            return BigInteger.valueOf(IP_INVALID);
+            return BigInteger.valueOf(INVALID_VALUE);
         }
         return ipV6toBigIntegerSum(ipv6);
     }
@@ -271,7 +270,7 @@ public class IpMacUtils {
      */
     public static long macToLong(final String mac) {
         if (!isLegalMac(mac)) {
-            return IP_INVALID;
+            return INVALID_VALUE;
         }
         String macAddr = mac.replace(MIDLINE, "");
         macAddr = macAddr.replace(COLON, "");
@@ -507,13 +506,20 @@ public class IpMacUtils {
         if (isNotLegalMac(mac) || Objects.isNull(macs) || macs.length == 0) {
             return false;
         }
-        long macLong = macToLong(mac);
+        String formattedMac = formatMac(mac);
         for (String mac2 : macs) {
-            if (macLong == macToLong(mac2)) {
+            if (formattedMac.equals(formatMac(mac2))) {
                 return true;
             }
         }
         return false;
+    }
+
+    private static String formatMac(String mac) {
+        if (isBlank(mac)) {
+            return "";
+        }
+        return mac.replace(MIDLINE, COLON).toLowerCase();
     }
 
     private static boolean isBlank(CharSequence cs) {

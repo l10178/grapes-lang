@@ -6,10 +6,9 @@ branches:
   - master
 cache:
   directories:
-  - .autoconf
   - $HOME/.m2
 before_install:
-  - "echo skipped"
+  - export TRAVIS_TAG=$(git tag --points-at HEAD)
 install:
   - "echo skipped"
 script:

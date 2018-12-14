@@ -1,8 +1,8 @@
 {
     "package": {
         "subject": "l10178",
-        "repo": "oss-repo",
-        "name": "@project.artifactId@",
+        "repo": "maven",
+        "name": "${project.artifactId}",
         "desc": "A collection of IP and MAC utilities.",
         "website_url": "https://github.com/l10178/grapes-lang",
         "issue_tracker_url": "https://github.com/l10178/grapes-lang/issues",
@@ -18,18 +18,18 @@
         "public_stats": true
     },
     "version": {
-        "name": "@version@",
-        "released": "@release_date@",
-        "vcs_tag": "@version@"
+        "name": "${project.version}",
+        "released": "${timestamp}",
+        "vcs_tag": "${project.version}"
     },
     "files": [
         {
             "includePattern": "target/(.*\\.jar)",
-            "uploadPattern": "com/github/tomschi/${project.artifactId}/${project.version}/$1"
+            "uploadPattern": "com/nxest/${project.artifactId}/${project.version}/$1"
         },
         {
             "includePattern": "pom.xml",
-            "uploadPattern": "com/github/tomschi/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}.pom"
+            "uploadPattern": "com/nxest/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}.pom"
         }
     ],
     "publish": true

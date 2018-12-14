@@ -18,11 +18,10 @@ after_success:
   - "echo skipped"
 before_deploy:
   - "echo skipped"
-  - make prepare-release-bintray
 deploy:
   - provider: bintray
     skip_cleanup: true
-    file: .bintray.json
+    file: target/.bintray.json
     user: l10178
     key: $BINTRAY_API_KEY
     dry-run: true

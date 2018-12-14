@@ -1,7 +1,7 @@
 {
     "package": {
         "subject": "l10178",
-        "repo": "l10178/grapes-lang",
+        "repo": "oss-repo",
         "name": "@project.artifactId@",
         "desc": "A collection of IP and MAC utilities.",
         "website_url": "https://github.com/l10178/grapes-lang",
@@ -24,11 +24,12 @@
     },
     "files": [
         {
-            "includePattern": "target/(*.jar)",
-            "uploadPattern": "$1",
-            "matrixParams": {
-                "override": 1
-            }
+            "includePattern": "target/(.*\\.jar)",
+            "uploadPattern": "com/github/tomschi/${project.artifactId}/${project.version}/$1"
+        },
+        {
+            "includePattern": "pom.xml",
+            "uploadPattern": "com/github/tomschi/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}.pom"
         }
     ],
     "publish": true

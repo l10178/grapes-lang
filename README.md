@@ -9,13 +9,13 @@ A collection of IP and MAC utilities. For example, convert an IP string address 
 
 Download
 ----------
-Download the [JARs](https://search.maven.org/search?q=a:grapes-lang). Or for Maven, add to your pom.xml:
+For Maven, add to your pom.xml:
 
 ```xml
 <dependency>
   <groupId>com.nxest.grapes</groupId>
   <artifactId>grapes-lang</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
 </dependency>
 ```
 

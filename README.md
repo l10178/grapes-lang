@@ -15,7 +15,7 @@ For Maven, add to your pom.xml:
 <dependency>
   <groupId>com.nxest.grapes</groupId>
   <artifactId>grapes-lang</artifactId>
-  <version>0.0.5</version>
+  <version>latest</version>
 </dependency>
 ```
 

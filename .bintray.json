@@ -25,11 +25,11 @@
     "files": [
         {
             "includePattern": "${project.build.directory}/(.*\\.jar)",
-            "uploadPattern": "com/nxest/${project.artifactId}/${project.version}/$1"
+            "uploadPattern": "com/nxest/grapes/${project.artifactId}/${project.version}/$1"
         },
         {
             "includePattern": "${project.basedir}/pom.xml",
-            "uploadPattern": "com/nxest/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}.pom"
+            "uploadPattern": "com/nxest/grapes/${project.artifactId}/${project.version}/${project.artifactId}-${project.version}.pom"
         }
     ],
     "publish": true

@@ -16,3 +16,15 @@ script:
   - mvn clean package
 after_success:
   - "echo skipped"
+before_deploy:
+  - "echo skipped"
+  - make prepare-release-bintray
+deploy:
+  - provider: bintray
+    skip_cleanup: true
+    file: .bintray.json
+    user: $BINTRAY_USER
+    key: $BINTRAY_API_KEY
+    dry-run: true
+    on:
+      tags: true

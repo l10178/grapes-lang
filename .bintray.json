@@ -1,0 +1,35 @@
+{
+    "package": {
+        "subject": "l10178",
+        "repo": "l10178/grapes-lang",
+        "name": "@project.artifactId@",
+        "desc": "A collection of IP and MAC utilities.",
+        "website_url": "https://github.com/l10178/grapes-lang",
+        "issue_tracker_url": "https://github.com/l10178/grapes-lang/issues",
+        "vcs_url": "https://github.com/l10178/grapes-lang.git",
+        "licenses": [
+            "MIT"
+        ],
+        "labels": [
+            "IP",
+            "MAC"
+        ],
+        "public_download_numbers": true,
+        "public_stats": true
+    },
+    "version": {
+        "name": "@version@",
+        "released": "@release_date@",
+        "vcs_tag": "@version@"
+    },
+    "files": [
+        {
+            "includePattern": "target/(*.jar)",
+            "uploadPattern": "$1",
+            "matrixParams": {
+                "override": 1
+            }
+        }
+    ],
+    "publish": true
+}

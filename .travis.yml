@@ -19,7 +19,7 @@ after_success:
 before_deploy:
   - "echo skipped"
 deploy:
-  - provider: bintray
+    provider: bintray
     skip_cleanup: true
     file: target/.bintray.json
     user: l10178
